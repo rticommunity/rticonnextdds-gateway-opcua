@@ -1,0 +1,1251 @@
+<?xml version="1.0"?>
+<!--
+   (c) 2017-2020 Copyright, Real-Time Innovations, Inc. (RTI)
+   All rights reserved.
+
+   RTI grants Licensee a license to use, modify, compile, and create derivative
+   works of the Software solely in combination with RTI Connext DDS. Licensee
+   may redistribute copies of the Software provided that all such copies are
+   subject to this License. The Software is provided "as is", with no warranty
+   of any type, including any warranty for fitness for any purpose. RTI is
+   under no obligation to maintain or support the Software. RTI shall not be
+   liable for any incidental or consequential damages arising out of the use or
+   inability to use the Software. For purposes of clarity, nothing in this
+   License prevents Licensee from using alternate versions of DDS, provided
+   that Licensee may not combine or link such alternate versions of DDS with
+   the Software.
+-->
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="../schema/rti_dds_opcua_service.xsd">
+    <types>
+        <struct name="ScalarTypes">
+            <member name="my_boolean" type="boolean"/>
+            <member name="my_sbyte" type="int8"/>
+            <member name="my_byte" type="uint8"/>
+            <member name="my_int16" type="int16"/>
+            <member name="my_uint16" type="uint16"/>
+            <member name="my_int32" type="int32"/>
+            <member name="my_uint32" type="uint32"/>
+            <member name="my_int64" type="int64"/>
+            <member name="my_uint64" type="uint64"/>
+            <member name="my_float" type="float" />
+            <member name="my_double" type="double" />
+            <member name="my_string" type="string"/>
+            <member name="my_datetime"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::DateTime"/>
+            <member name="my_guid"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::Guid" />
+            <member name="my_bytestring"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::ByteString" />
+            <member name="my_xmlelement"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::XmlElement" />
+            <member name="my_nodeid"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::NodeId" />
+            <member name="my_expandednodeid"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::ExpandedNodeId" />
+            <member name="my_statuscode"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::StatusCode" />
+            <member name="my_qualifiedname"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::QualifiedName" />
+            <member name="my_localizedtext"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::LocalizedText" />
+        </struct>
+        <const name="MAX_SEQUENCE_LENGTH" type="uint32" value="10" />
+        <struct name="ArrayTypes">
+            <member name="my_boolean_seq"
+                    type="boolean"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_sbyte_seq"
+                    type="int8"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_byte_seq"
+                    type="uint8"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_int16_seq"
+                    type="int16"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_uint16_seq"
+                    type="uint16"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_int32_seq"
+                    type="int32"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_uint32_seq"
+                    type="uint32"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_int64_seq"
+                    type="int64"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_uint64_seq"
+                    type="uint64"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_float_seq"
+                    type="float"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_double_seq"
+                    type="double"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_string_seq"
+                    type="string"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_datetime_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::DateTime"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_guid_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::Guid"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_bytestring_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::ByteString"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_xmlelement_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::XmlElement"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_nodeid_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::NodeId"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_expandednodeid_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::ExpandedNodeId"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_statuscode_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::StatusCode"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_qualifiedname_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::QualifiedName"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+            <member name="my_localizedtext_seq"
+                    type="nonBasic"
+                    nonBasicTypeName="rti::opcua::types::LocalizedText"
+                    sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        </struct>
+        <const name="MAX_COLOR_LEN" type="long" value="128" />
+        <struct name="ShapeType">
+            <member name="color"
+                    key="true"
+                    type="string"
+                    stringMaxLength="MAX_COLOR_LEN" />
+            <member name="x" type="long" />
+            <member name="y" type="long" />
+            <member name="shapesize" type="long" />
+        </struct>
+        <const name="MAX_LENGTH" type="long" value="100"/>
+        <struct name="MyType">
+            <member name="my_boolean" type="boolean" />
+            <member name="my_byte" type="octet" />
+            <member name="my_int16" type="int16" />
+            <member name="my_uint16" type="uint16" />
+            <member name="my_int32" type="int32" />
+            <member name="my_uint32" type="uint32" />
+            <member name="my_int64" type="int64" />
+            <member name="my_uint64" type="uint64" />
+            <member name="my_float" type="float" />
+            <member name="my_double" type="double" />
+            <member name="my_char" type="char" />
+            <member name="my_string"
+                    type="string"
+                    stringMaxLength="MAX_LENGTH" />
+            <member name="my_boolean_array"
+                    type="boolean"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_byte_array"
+                    type="octet"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_int16_array"
+                    type="int16"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_uint16_array"
+                    type="uint16"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_int32_array"
+                    type="int32"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_uint32_array"
+                    type="uint32"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_int64_array"
+                    type="int64"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_uint64_array"
+                    type="uint64"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_float_array"
+                    type="float"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_double_array"
+                    type="double"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_char_array"
+                    type="char"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_string_array"
+                    type="string"
+                    stringMaxLength="512"
+                    arrayDimensions="MAX_LENGTH" />
+            <member name="my_boolean_sequence"
+                    type="boolean"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_byte_sequence"
+                    type="octet"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_int16_sequence"
+                    type="int16"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_uint16_sequence"
+                    type="uint16"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_int32_sequence"
+                    type="int32"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_uint32_sequence"
+                    type="uint32"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_int64_sequence"
+                    type="int64"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_uint64_sequence"
+                    type="uint64"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_float_sequence"
+                    type="float"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_double_sequence"
+                    type="double"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_char_sequence"
+                    type="char"
+                    sequenceMaxLength="MAX_LENGTH" />
+            <member name="my_string_sequence"
+                    type="string"
+                    stringMaxLength="512"
+                    sequenceMaxLength="MAX_LENGTH" />
+        </struct>
+    </types>
+
+    <qos_library name="MyQosLibrary">
+        <qos_profile name="MyQosProfile" is_default_qos="true">
+            <participant_qos>
+                <database>
+                    <shutdown_cleanup_period>
+                        <sec>0</sec>
+                        <nanosec>100000000</nanosec>
+                    </shutdown_cleanup_period>
+                </database>
+            </participant_qos>
+        </qos_profile>
+    </qos_library>
+
+    <ddsopcua_service name="default">
+        <annotation>
+            <documentation>
+    This configuration subscribes to a set of monitored items from
+    an OPC UA server and publishes the information over DDS using
+    a Topic.
+            </documentation>
+        </annotation>
+
+        <!-- Connection to an OPC UA Server that may be used by instances of
+            the OPC UA to DDS Bridge -->
+        <opcua_connection name="MyServerConnection"
+                          server_endpoint_url="opc.tcp://127.0.0.1:4840">
+            <timeout>5000</timeout>
+        </opcua_connection>
+
+        <!-- DomainParticipant that may be used by OPC UA to DDS Bridge
+            configurations to participate in DDS Domain 0 -->
+        <domain_participant name="MyDomainParticipant" domain_id="0" >
+            <!-- Registration of those types that will be later on used in
+            Topic definitions -->
+            <register_type name="ScalarTypes" type_ref="ScalarTypes" />
+        </domain_participant>
+
+        <!-- In this example, we define an OPC UA to DDS Bridge, which allows
+            us to define a DDS Service capable of invoking services on remote
+            OPC UA Servers, and capable of propagating OPC UA Subscriptions to
+            DDS with custom DDS Topics -->
+        <opcua_to_dds_bridge name="MyOpcUa2DdsBridge">
+            <!-- Configuration of the DDS mapping to various Service Sets
+            in a remote OPC UA Server -->
+            <service_set opcua_connection_ref="MyServerConnection"
+                         domain_participant_ref="MyDomainParticipant" >
+
+                <!-- This example enables the Attribute Service Set that allows
+                    remote applications to perform Read/Write operations
+                    through the OPC UA/DDS Gateway. -->
+                <attribute_service_set>
+                    <enabled>true</enabled>
+                </attribute_service_set>
+            </service_set>
+
+            <!-- Configuration of an OPC UA Subscription capable of mapping
+                different OPC UA Inputs (subscriptions) to different DDS Outputs
+                (publications) -->
+            <subscription name="MySubscription">
+                <opcua_input name="MyInput"
+                             opcua_connection_ref="MyServerConnection" >
+                    <!-- Subscription protocol configuration -->
+                    <subscription_protocol>
+                        <requested_publishing_interval>10</requested_publishing_interval>
+                        <requested_lifetime_count>3000</requested_lifetime_count>
+                        <requested_max_keep_alive_count>1000</requested_max_keep_alive_count>
+                        <max_notifications_per_publish>0</max_notifications_per_publish>
+                        <publishing_enabled>true</publishing_enabled>
+                        <priority>0</priority>
+                    </subscription_protocol>
+
+                    <!-- Monitored Items included in the OPC UA Subscription -->
+                    <monitored_items>
+                        <node_attribute dds_topic_field_name="my_boolean">
+                            <!-- Monitored Items are identified by their NodeID -->
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52001</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                            <sampling_interval>1</sampling_interval>
+                            <queue_size>2</queue_size>
+                            <discard_oldest>true</discard_oldest>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_sbyte">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52002</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_byte">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52003</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int16">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52004</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint16">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52005</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int32">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52006</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint32">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52007</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int64">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52008</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint64">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52009</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_float">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52010</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_double">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52011</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_string">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52012</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_datetime">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52013</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_guid">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52014</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_bytestring">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52015</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_xmlelement">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52016</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_nodeid">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52017</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_expandednodeid">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52018</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_statuscode">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52019</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_qualifiedname">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52020</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_localizedtext">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52021</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                    </monitored_items>
+                </opcua_input>
+
+                <!-- This DDS Output combines information on DataItems
+                    associated with the OPC UA Subscription -->
+                <dds_output name="MyOutput"
+                            domain_participant_ref="MyDomainParticipant">
+                    <!-- Topic name is ScalarTypesTopic -->
+                    <topic_name>ScalarTypesTopic</topic_name>
+                    <!-- The type of the Topic is ScalarTypes, which was
+                        previously registered with MyDomainParticipant -->
+                    <registered_type_name>ScalarTypes</registered_type_name>
+                    <!-- The DataWriter associated with the DDS Output
+                        publishes data with TRANSIENT_LOCAL durability -->
+                    <datawriter_qos>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datawriter_qos>
+                </dds_output>
+
+            </subscription>
+        </opcua_to_dds_bridge>
+
+    </ddsopcua_service>
+
+    <ddsopcua_service name="multipleSubscriptions">
+        <annotation>
+            <documentation>
+    This configuration creates two separate subscriptions to items
+    in an OPC UA server and publishes the information over DDS using
+    two separate Topics.
+            </documentation>
+        </annotation>
+        <opcua_connection name="MyServerConnection"
+                          server_endpoint_url="opc.tcp://127.0.0.1:4840"/>
+
+        <domain_participant name="MyDomainParticipant" domain_id="0" >
+            <register_type name="ScalarTypes" type_ref="ScalarTypes" />
+            <register_type name="ArrayTypes" type_ref="ArrayTypes" />
+        </domain_participant>
+
+        <opcua_to_dds_bridge name="MyOpcUa2DdsBridgeWithMultipleSubs">
+
+            <service_set opcua_connection_ref="MyServerConnection"
+                         domain_participant_ref="MyDomainParticipant" >
+                <attribute_service_set>
+                    <enabled>true</enabled>
+                </attribute_service_set>
+            </service_set>
+
+            <subscription name="ScalarValues">
+                <opcua_input name="ScalarValuesInput"
+                             opcua_connection_ref="MyServerConnection" >
+                    <subscription_protocol>
+                        <requested_publishing_interval>10</requested_publishing_interval>
+                        <requested_lifetime_count>3000</requested_lifetime_count>
+                        <requested_max_keep_alive_count>1000</requested_max_keep_alive_count>
+                        <max_notifications_per_publish>0</max_notifications_per_publish>
+                        <publishing_enabled>true</publishing_enabled>
+                        <priority>0</priority>
+                    </subscription_protocol>
+                    <monitored_items>
+                        <node_attribute dds_topic_field_name="my_boolean">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52001</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_sbyte">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52002</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_byte">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52003</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int16">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52004</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint16">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52005</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int32">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52006</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint32">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52007</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int64">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52008</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint64">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52009</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_float">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52010</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_double">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52011</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_string">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52012</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_datetime">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52013</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_guid">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52014</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_bytestring">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52015</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_xmlelement">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52016</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_nodeid">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52017</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_expandednodeid">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52018</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_statuscode">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52019</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_qualifiedname">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52020</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_localizedtext">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52021</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                    </monitored_items>
+                </opcua_input>
+                <dds_output name="ScalarValuesOutput"
+                            domain_participant_ref="MyDomainParticipant">
+                    <topic_name>ScalarTypesTopic</topic_name>
+                    <registered_type_name>ScalarTypes</registered_type_name>
+                </dds_output>
+            </subscription>
+
+            <subscription name="ArrayValues">
+                <opcua_input name="ArrayValuesInput"
+                             opcua_connection_ref="MyServerConnection" >
+                    <subscription_protocol>
+                        <requested_publishing_interval>10</requested_publishing_interval>
+                        <requested_lifetime_count>3000</requested_lifetime_count>
+                        <requested_max_keep_alive_count>1000</requested_max_keep_alive_count>
+                        <max_notifications_per_publish>0</max_notifications_per_publish>
+                        <publishing_enabled>true</publishing_enabled>
+                        <priority>0</priority>
+                    </subscription_protocol>
+                    <monitored_items>
+                        <node_attribute dds_topic_field_name="my_boolean_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52101</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_sbyte_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52102</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_byte_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52103</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int16_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52104</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint16_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52105</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int32_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52106</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint32_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52107</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_int64_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52108</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_uint64_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52109</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_float_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52110</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_double_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52111</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_string_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52112</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_datetime_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52113</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_guid_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52114</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_bytestring_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52115</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_xmlelement_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52116</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_nodeid_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52117</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_expandednodeid_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52118</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_statuscode_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52119</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_qualifiedname_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52120</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                        <node_attribute dds_topic_field_name="my_localizedtext_seq">
+                            <node_id>
+                                <namespace_index>1</namespace_index>
+                                <numeric_identifier>52121</numeric_identifier>
+                            </node_id>
+                            <attribute_id>VALUE</attribute_id>
+                        </node_attribute>
+                    </monitored_items>
+                </opcua_input>
+                <dds_output name="ArrayValuesOutput"
+                            domain_participant_ref="MyDomainParticipant">
+                    <topic_name>ArrayTypesTopic</topic_name>
+                    <registered_type_name>ArrayTypes</registered_type_name>
+                </dds_output>
+            </subscription>
+        </opcua_to_dds_bridge>
+    </ddsopcua_service>
+    <ddsopcua_service name="publicationExample">
+        <annotation>
+            <documentation>
+    This configuration creates to publications, which subscribe to two separate
+    Topics in the DDS Global Data Space, and propagate that information to a
+    remote OPC UA server.
+            </documentation>
+        </annotation>
+        <opcua_connection name="MyServerConnection"
+                          server_endpoint_url="opc.tcp://127.0.0.1:4840"/>
+
+        <domain_participant name="MyDomainParticipant" domain_id="0" >
+            <register_type name="MyType" type_ref="MyType" />
+            <register_type name="ShapeType" type_ref="ShapeType" />
+        </domain_participant>
+
+        <opcua_to_dds_bridge name="MyDds2OpcUaBridge">
+
+            <service_set opcua_connection_ref="MyServerConnection"
+                         domain_participant_ref="MyDomainParticipant" >
+                <attribute_service_set>
+                    <enabled>true</enabled>
+                </attribute_service_set>
+            </service_set>
+
+            <publication name="ExamplePublication">
+                <dds_input name="MyTypeInput"
+                           domain_participant_ref="MyDomainParticipant">
+                    <topic_name>MyTopic</topic_name>
+                    <registered_type_name>MyType</registered_type_name>
+                </dds_input>
+                <opcua_output name="MyTypeOutput"
+                                opcua_connection_ref="MyServerConnection">
+                    <node_attribute dds_topic_field_name="my_boolean">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61103</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_byte">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61104</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int16">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61105</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint16">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61106</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int32">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61107</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint32">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61108</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int64">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61109</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint64">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61110</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_float">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61111</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_double">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61112</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_char">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61113</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_string">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61114</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_boolean_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61115</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_byte_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61116</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int16_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61117</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint16_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61118</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int32_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61119</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint32_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61120</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int64_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61121</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint64_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61122</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_float_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61123</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_double_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61124</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_char_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61125</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_string_array">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61126</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_boolean_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61127</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_byte_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61128</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int16_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61129</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint16_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61130</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int32_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61131</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint32_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61132</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_int64_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61133</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_uint64_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61134</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_float_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61135</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_double_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61136</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_char_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61137</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="my_string_sequence">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>61138</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                </opcua_output>
+            </publication>
+            <publication name="SquarePublication">
+                <dds_input name="SquareTopic"
+                            domain_participant_ref="MyDomainParticipant">
+                    <topic_name>Square</topic_name>
+                    <registered_type_name>ShapeType</registered_type_name>
+                    <sample_selectors>
+                        <selector name="BLUE">
+                            <filter>color = 'BLUE'</filter>
+                        </selector>
+                        <selector name="RED">
+                            <filter>color = 'RED'</filter>
+                        </selector>
+                    </sample_selectors>
+                </dds_input>
+                <opcua_output name="Square"
+                                opcua_connection_ref="MyServerConnection">
+                    <node_attribute dds_topic_field_name="color"
+                                    dds_sample_selector_ref="BLUE">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60103</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="x"
+                                    dds_sample_selector_ref="BLUE">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60104</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="y"
+                                    dds_sample_selector_ref="BLUE">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60105</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="shapesize"
+                                    dds_sample_selector_ref="BLUE">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60106</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="color"
+                                    dds_sample_selector_ref="RED">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60203</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="x"
+                                    dds_sample_selector_ref="RED">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60204</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="y"
+                                    dds_sample_selector_ref="RED">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60205</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="shapesize"
+                                    dds_sample_selector_ref="RED">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60206</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="color">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60303</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="x">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60304</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="y">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60305</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                    <node_attribute dds_topic_field_name="shapesize">
+                        <node_id>
+                            <namespace_index>1</namespace_index>
+                            <numeric_identifier>60306</numeric_identifier>
+                        </node_id>
+                        <attribute_id>VALUE</attribute_id>
+                    </node_attribute>
+                </opcua_output>
+            </publication>
+        </opcua_to_dds_bridge>
+    </ddsopcua_service>
+</dds>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   (c) 2017-2020 Copyright, Real-Time Innovations, Inc. (RTI)
+   All rights reserved.
+
+   RTI grants Licensee a license to use, modify, compile, and create derivative
+   works of the Software solely in combination with RTI Connext DDS. Licensee
+   may redistribute copies of the Software provided that all such copies are
+   subject to this License. The Software is provided "as is", with no warranty
+   of any type, including any warranty for fitness for any purpose. RTI is
+   under no obligation to maintain or support the Software. RTI shall not be
+   liable for any incidental or consequential damages arising out of the use or
+   inability to use the Software. For purposes of clarity, nothing in this
+   License prevents Licensee from using alternate versions of DDS, provided
+   that Licensee may not combine or link such alternate versions of DDS with
+   the Software.
+-->
+<types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://community.rti.com/schema/6.0.0/rti_dds_topic_types.xsd">
+    <include file="OpcUaBuiltinDataTypes.xml" />
+    <struct name="ScalarTypes">
+        <member name="my_boolean" type="boolean"/>
+        <member name="my_sbyte" type="int8"/>
+        <member name="my_byte" type="uint8"/>
+        <member name="my_int16" type="int16"/>
+        <member name="my_uint16" type="uint16"/>
+        <member name="my_int32" type="int32"/>
+        <member name="my_uint32" type="uint32"/>
+        <member name="my_int64" type="int64"/>
+        <member name="my_uint64" type="uint64"/>
+        <member name="my_float" type="float" />
+        <member name="my_double" type="double" />
+        <member name="my_string" type="string"/>
+        <member name="my_datetime"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::DateTime"/>
+        <member name="my_guid"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::Guid" />
+        <member name="my_bytestring"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::ByteString" />
+        <member name="my_xmlelement"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::XmlElement" />
+        <member name="my_nodeid"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::NodeId" />
+        <member name="my_expandednodeid"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::ExpandedNodeId" />
+        <member name="my_statuscode"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::StatusCode" />
+        <member name="my_qualifiedname"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::QualifiedName" />
+        <member name="my_localizedtext"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::LocalizedText" />
+    </struct>
+    <const name="MAX_SEQUENCE_LENGTH" type="uint32" value="10" />
+    <struct name="ArrayTypes">
+        <member name="my_boolean_seq"
+                type="boolean"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_sbyte_seq"
+                type="int8"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_byte_seq"
+                type="uint8"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_int16_seq"
+                type="int16"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_uint16_seq"
+                type="uint16"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_int32_seq"
+                type="int32"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_uint32_seq"
+                type="uint32"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_int64_seq"
+                type="int64"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_uint64_seq"
+                type="uint64"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_float_seq"
+                type="float"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_double_seq"
+                type="double"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_string_seq"
+                type="string"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_datetime_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::DateTime"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_guid_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::Guid"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_bytestring_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::ByteString"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_xmlelement_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::XmlElement"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_nodeid_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::NodeId"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_expandednodeid_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::ExpandedNodeId"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_statuscode_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::StatusCode"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_qualifiedname_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::QualifiedName"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+        <member name="my_localizedtext_seq"
+                type="nonBasic"
+                nonBasicTypeName="rti::opcua::types::LocalizedText"
+                sequenceMaxLength="MAX_SEQUENCE_LENGTH"/>
+    </struct>
+    <const name="MAX_COLOR_LEN" type="long" value="128" />
+    <struct name="ShapeType">
+        <member name="color"
+                key="true"
+                type="string"
+                stringMaxLength="MAX_COLOR_LEN" />
+        <member name="x" type="long" />
+        <member name="y" type="long" />
+        <member name="shapesize" type="long" />
+    </struct>
+    <const name="MAX_LENGTH" type="long" value="25"/>
+    <struct name="MyType">
+        <member name="my_boolean" type="boolean" />
+        <member name="my_byte" type="octet" />
+        <member name="my_int16" type="int16" />
+        <member name="my_uint16" type="uint16" />
+        <member name="my_int32" type="int32" />
+        <member name="my_uint32" type="uint32" />
+        <member name="my_int64" type="int64" />
+        <member name="my_uint64" type="uint64" />
+        <member name="my_float" type="float" />
+        <member name="my_double" type="double" />
+        <member name="my_char" type="char" />
+        <member name="my_string"
+                type="string"
+                stringMaxLength="MAX_LENGTH" />
+        <member name="my_boolean_array"
+                type="boolean"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_byte_array"
+                type="octet"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_int16_array"
+                type="int16"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_uint16_array"
+                type="uint16"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_int32_array"
+                type="int32"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_uint32_array"
+                type="uint32"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_int64_array"
+                type="int64"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_uint64_array"
+                type="uint64"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_float_array"
+                type="float"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_double_array"
+                type="double"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_char_array"
+                type="char"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_string_array"
+                type="string"
+                stringMaxLength="512"
+                arrayDimensions="MAX_LENGTH" />
+        <member name="my_boolean_sequence"
+                type="boolean"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_byte_sequence"
+                type="octet"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_int16_sequence"
+                type="int16"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_uint16_sequence"
+                type="uint16"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_int32_sequence"
+                type="int32"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_uint32_sequence"
+                type="uint32"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_int64_sequence"
+                type="int64"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_uint64_sequence"
+                type="uint64"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_float_sequence"
+                type="float"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_double_sequence"
+                type="double"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_char_sequence"
+                type="char"
+                sequenceMaxLength="MAX_LENGTH" />
+        <member name="my_string_sequence"
+                type="string"
+                stringMaxLength="512"
+                sequenceMaxLength="MAX_LENGTH" />
+    </struct>
+</types>

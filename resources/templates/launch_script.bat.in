@@ -1,0 +1,32 @@
+@REM (c) 2021 Copyright, Real-Time Innovations, Inc. (RTI)
+@REM All rights reserved.
+@REM
+@REM RTI grants Licensee a license to use, modify, compile, and create
+@REM derivative works of the Software solely in combination with RTI Connext
+@REM DDS. Licensee may redistribute copies of the Software provided that all
+@REM such copies are subject to this License. The Software is provided "as is",
+@REM with no warranty of any type, including any warranty for fitness for any
+@REM purpose. RTI is under no obligation to maintain or support the Software.
+@REM RTI shall not be liable for any incidental or consequential damages
+@REM arising out of the use or inability to use the Software. For purposes of
+@REM clarity, nothing in this License prevents Licensee from using alternate
+@REM versions of DDS, provided that Licensee may not combine or link such
+@REM alternate versions of DDS with the Software
+
+@echo off
+setlocal EnableDelayedExpansion
+
+set appName=${LAUNCH_EXECUTABLE_NAME}
+set executableName=${LAUNCH_EXECUTABLE_NAME}.exe
+set scriptVersion=${CONNEXTDDS_VERSION}
+
+set dir=%~dp0
+
+set runWithinModule=false
+call "%dir%..\resource\scripts\rticommon.bat"
+if not !ERRORLEVEL! == 0  (
+    exit /b 1
+)
+
+@REM Execute the command
+call "%executableWithPath%" %*

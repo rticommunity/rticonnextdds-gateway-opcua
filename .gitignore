@@ -1,0 +1,6 @@
+build/
+install/
+config.mk
+.vscode
+.venv
+third_party/

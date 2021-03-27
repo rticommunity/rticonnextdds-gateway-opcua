@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   (c) 2017-2020 Copyright, Real-Time Innovations, Inc. (RTI)
+   All rights reserved.
+
+   RTI grants Licensee a license to use, modify, compile, and create derivative
+   works of the Software solely in combination with RTI Connext DDS. Licensee
+   may redistribute copies of the Software provided that all such copies are
+   subject to this License. The Software is provided "as is", with no warranty
+   of any type, including any warranty for fitness for any purpose. RTI is
+   under no obligation to maintain or support the Software. RTI shall not be
+   liable for any incidental or consequential damages arising out of the use or
+   inability to use the Software. For purposes of clarity, nothing in this
+   License prevents Licensee from using alternate versions of DDS, provided
+   that Licensee may not combine or link such alternate versions of DDS with
+   the Software.
+-->
+<types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://community.rti.com/schema/6.0.0/rti_dds_topic_types.xsd">
+    <module name="rti">
+        <module name="opcua">
+            <module name="types">
+
+                <const name="UNBOUNDED_SEQUENCE_LENGTH"
+                       type="int32"
+                       value="100"/>
+
+                <typedef name="Boolean" type="boolean"/>
+                <typedef name="SByte" type="int8"/>
+                <typedef name="Byte" type="uint8"/>
+                <typedef name="Int16" type="int16"/>
+                <typedef name="UInt16" type="uint16"/>
+                <typedef name="Int32" type="int32"/>
+                <typedef name="UInt32" type="uint32"/>
+                <typedef name="Int64" type="int64"/>
+                <typedef name="UInt64" type="uint64"/>
+                <typedef name="Float" type="float32"/>
+                <typedef name="Double" type="float64"/>
+                <typedef name="String"
+                         type="string"
+                         stringMaxLength="-1"/>
+
+                <typedef name="DateTime" type="int64"/>
+
+                <struct name="Guid" nested="true">
+                    <member name="data1" type="uint32"/>
+                    <member name="data2" type="uint16"/>
+                    <member name="data3" type="uint16"/>
+                    <member name="data4" type="uint8" arrayDimensions="8"/>
+                </struct>
+
+                <typedef name="ByteString"
+                         type="uint8"
+                         sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+
+                <typedef name="XmlElement"
+                         type="string"
+                         stringMaxLength="-1"/>
+
+                <enum name="NodeIdentifierKind">
+                    <enumerator name="NUMERIC_NODE_ID" value="0"/>
+                    <enumerator name="STRING_NODE_ID" value="3"/>
+                    <enumerator name="GUID_NODE_ID" value="4"/>
+                    <enumerator name="OPAQUE_NODE_ID" value="5"/>
+                </enum>
+
+                <union name="NodeIdentifierType" nested="true">
+                    <discriminator type="nonBasic"
+                                   nonBasicTypeName="rti::opcua::types::NodeIdentifierKind"/>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::NUMERIC_NODE_ID"/>
+                        <member name="numeric_id" type="uint32"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::STRING_NODE_ID"/>
+                        <member name="string_id"
+                                type="string"
+                                stringMaxLength="4096"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::OPAQUE_NODE_ID"/>
+                        <member name="opaque_id"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::ByteString"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::GUID_NODE_ID"/>
+                        <member name="guid_id"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::Guid"/>
+                    </case>
+                </union>
+
+                <struct name="NodeId" nested="true">
+                    <member name="namespace_index" type="uint16"/>
+                    <member name="identifier_type"
+                            type="nonBasic"
+                            nonBasicTypeName="rti::opcua::types::NodeIdentifierType"/>
+                </struct>
+
+                <struct name="ExpandedNodeId"
+                        baseType="rti::opcua::types::NodeId"
+                        nested="true">
+                    <member name="namespace_uri"
+                            type="string"
+                            stringMaxLength="-1"/>
+                    <member name="server_index" type="uint32"/>
+                </struct>
+
+                <typedef name="StatusCode" type="uint32"/>
+
+                <struct name="QualifiedName" nested="true">
+                    <member name="namespace_index" type="uint16"/>
+                    <member name="name" type="string" stringMaxLength="512"/>
+                </struct>
+
+                <struct name="LocalizedText"
+                        extensibility="mutable"
+                        nested="true">
+                    <member name="locale"
+                            type="string"
+                            stringMaxLength="-1"
+                            optional="true"
+                            id="1"/>
+                    <member name="text"
+                            type="string"
+                            stringMaxLength="-1"
+                            optional="true"
+                            id="2"/>
+                </struct>
+
+                <enum name="BodyEncoding">
+                    <enumerator name="NONE_BODY_ENCODING" value="0"/>
+                    <enumerator name="BYTESTRING_BODY_ENCODING" value="1"/>
+                    <enumerator name="XMLELEMENT_BODY_ENCODING" value="2"/>
+                </enum>
+
+                <union name="ExtensionObjectBody" nested="true">
+                    <discriminator type="nonBasic"
+                                   nonBasicTypeName="rti::opcua::types::BodyEncoding"/>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::NONE_BODY_ENCODING"/>
+                        <member name="none_encoding" type="uint8"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::BYTESTRING_BODY_ENCODING"/>
+                        <member name="bytestring_encoding"
+                                type="uint8"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::XMLELEMENT_BODY_ENCODING"/>
+                        <member name="xmlelement_encoding"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::XmlElement"/>
+                    </case>
+                </union>
+
+                <struct name="ExtensionObject" nested="true">
+                    <member name="type_id"
+                            type="nonBasic"
+                            nonBasicTypeName="rti::opcua::types::NodeId"/>
+                    <member name="body"
+                            type="nonBasic"
+                            nonBasicTypeName="rti::opcua::types::ExtensionObjectBody"/>
+                </struct>
+
+                <enum name="BuiltinTypeKind">
+                    <enumerator name="BOOLEAN_TYPE" value="1"/>
+                    <enumerator name="SBYTE_TYPE" value="2"/>
+                    <enumerator name="BYTE_TYPE" value="3"/>
+                    <enumerator name="INT16_TYPE" value="4"/>
+                    <enumerator name="UINT16_TYPE" value="5"/>
+                    <enumerator name="INT32_TYPE" value="6"/>
+                    <enumerator name="UINT32_TYPE" value="7"/>
+                    <enumerator name="INT64_TYPE" value="8"/>
+                    <enumerator name="UINT64_TYPE" value="9"/>
+                    <enumerator name="FLOAT_TYPE" value="10"/>
+                    <enumerator name="DOUBLE_TYPE" value="11"/>
+                    <enumerator name="STRING_TYPE" value="12"/>
+                    <enumerator name="DATETIME_TYPE" value="13"/>
+                    <enumerator name="GUID_TYPE" value="14"/>
+                    <enumerator name="BYTESTRING_TYPE" value="15"/>
+                    <enumerator name="XMLELEMENT_TYPE" value="16"/>
+                    <enumerator name="NODEID_TYPE" value="17"/>
+                    <enumerator name="EXPANDEDNODEID_TYPE" value="18"/>
+                    <enumerator name="STATUSCODE_TYPE" value="19"/>
+                    <enumerator name="QUALIFIEDNAME_TYPE" value="20"/>
+                    <enumerator name="LOCALIZEDTEXT_TYPE" value="21"/>
+                    <enumerator name="EXTENSIONOBJECT_TYPE" value="22"/>
+                    <enumerator name="DATAVALUE_TYPE" value="23"/>
+                    <enumerator name="VARIANT_TYPE" value="24"/>
+                    <enumerator name="DIAGNOSTICINFO_TYPE" value="25"/>
+                </enum>
+
+                <union name="VariantValue" nested="true">
+                    <discriminator type="nonBasic" nonBasicTypeName="rti::opcua::types::BuiltinTypeKind"/>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::BOOLEAN_TYPE"/>
+                        <member name="bool_value"
+                                type="boolean"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::SBYTE_TYPE"/>
+                        <member name="sbyte_value"
+                                type="int8"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::BYTE_TYPE"/>
+                        <member name="byte_value"
+                                type="uint8"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::INT16_TYPE"/>
+                        <member name="int16_value"
+                                type="int16"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::UINT16_TYPE"/>
+                        <member name="uint16_value"
+                                type="uint16"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::INT32_TYPE"/>
+                        <member name="int32_value"
+                                type="int32"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::UINT32_TYPE"/>
+                        <member name="uint32_value"
+                                type="uint32"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::INT64_TYPE"/>
+                        <member name="int64_value"
+                                type="int64"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::UINT64_TYPE"/>
+                        <member name="uint64_value"
+                                type="uint64"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::FLOAT_TYPE"/>
+                        <member name="float_value"
+                                type="float32"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::DOUBLE_TYPE"/>
+                        <member name="double_value"
+                                type="float64"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::STRING_TYPE"/>
+                        <member name="string_value"
+                                stringMaxLength="255"
+                                type="string"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::DATETIME_TYPE"/>
+                        <member name="datetime_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::DateTime"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::GUID_TYPE"/>
+                        <member name="guid_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::Guid"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::BYTESTRING_TYPE"/>
+                        <member name="bytestring_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::ByteString"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::XMLELEMENT_TYPE"/>
+                        <member name="xmlelement_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::XmlElement"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::NODEID_TYPE"/>
+                        <member name="nodeid_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::NodeId"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::EXPANDEDNODEID_TYPE"/>
+                        <member name="expandednodeid_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::ExpandedNodeId"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::STATUSCODE_TYPE"/>
+                        <member name="statuscode_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::StatusCode"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::QUALIFIEDNAME_TYPE"/>
+                        <member name="qualifiedname_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::QualifiedName"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::LOCALIZEDTEXT_TYPE"/>
+                        <member name="localizedtext_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::LocalizedText"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                    <case>
+                        <caseDiscriminator value="rti::opcua::types::EXTENSIONOBJECT_TYPE"/>
+                        <member name="extensionobject_value"
+                                type="nonBasic"
+                                nonBasicTypeName="rti::opcua::types::ExtensionObject"
+                                sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    </case>
+                </union>
+
+                <struct name="Variant" nested="true">
+                    <member name="array_dimensions"
+                            type="uint32"
+                            sequenceMaxLength="UNBOUNDED_SEQUENCE_LENGTH"/>
+                    <member name="value"
+                            type="nonBasic"
+                            nonBasicTypeName="rti::opcua::types::VariantValue"/>
+                </struct>
+
+                <struct name= "DataValue"
+                        extensibility="mutable"
+                        nested="true">
+                    <member name="value" id="1" type="nonBasic" nonBasicTypeName= "rti::opcua::types::Variant" optional="true"/>
+                    <member name="status" id="2" type="nonBasic"  nonBasicTypeName= "rti::opcua::types::StatusCode" optional="true"/>
+                    <member name="source_timestamp" id="4" type="nonBasic"  nonBasicTypeName= "rti::opcua::types::DateTime" optional="true"/>
+                    <member name="server_timestamp" id="8" type="nonBasic"  nonBasicTypeName= "rti::opcua::types::DateTime" optional="true"/>
+                    <member name="source_pico_sec" id="16" type="uint16" optional="true"/>
+                    <member name="server_pico_sec" id="32" type="uint16" optional="true"/>
+                </struct>
+
+                <enum name="AttributeId">
+                    <enumerator name="ATTRIBUTE_ID_NODEID" value="1"/>
+                    <enumerator name="ATTRIBUTE_ID_NODECLASS" value="2"/>
+                    <enumerator name="ATTRIBUTE_ID_BROWSENAME" value="3"/>
+                    <enumerator name="ATTRIBUTE_ID_DISPLAYNAME" value="4"/>
+                    <enumerator name="ATTRIBUTE_ID_DESCRIPTION" value="5"/>
+                    <enumerator name="ATTRIBUTE_ID_WRITEMASK" value="6"/>
+                    <enumerator name="ATTRIBUTE_ID_USERWRITEMASK" value="7"/>
+                    <enumerator name="ATTRIBUTE_ID_ISABSTRACT" value="8"/>
+                    <enumerator name="ATTRIBUTE_ID_SYMMETRIC"  value="9"/>
+                    <enumerator name="ATTRIBUTE_ID_INVERSENAME" value="10"/>
+                    <enumerator name="ATTRIBUTE_ID_CONTAINSNOLOOPS" value="11"/>
+                    <enumerator name="ATTRIBUTE_ID_EVENTNOTIFIER" value="12"/>
+                    <enumerator name="ATTRIBUTE_ID_VALUE" value="13"/>
+                    <enumerator name="ATTRIBUTE_ID_DATATYPE" value="14"/>
+                    <enumerator name="ATTRIBUTE_ID_VALUERANK" value="15"/>
+                    <enumerator name="ATTRIBUTE_ID_ARRAYDIMENSIONS" value="16"/>
+                    <enumerator name="ATTRIBUTE_ID_ACCESSLEVEL" value="17"/>
+                    <enumerator name="ATTRIBUTE_ID_USERACCESSLEVEL" value="18"/>
+                    <enumerator name="ATTRIBUTE_ID_MINIMUMSAMPLINGINTERVAL" value="19"/>
+                    <enumerator name="ATTRIBUTE_ID_HISTORIZING" value="20"/>
+                    <enumerator name="ATTRIBUTE_ID_EXECUTABLE" value="21"/>
+                    <enumerator name="ATTRIBUTE_ID_USEREXECUTABLE" value="22"/>
+                </enum>
+                <module name="services">
+                    <enum name="ServiceOperation">
+                        <enumerator name="SERVICE_OPERATION_READ"/>
+                        <enumerator name="SERVICE_OPERATION_WRITE"/>
+                    </enum>
+                    <struct name="WriteRequest" nested="true">
+                        <member name="node_id" type="nonBasic" nonBasicTypeName="rti::opcua::types::NodeId"/>
+                        <member name="attribute_id" type="nonBasic" nonBasicTypeName="rti::opcua::types::AttributeId"/>
+                        <member name="value" type="nonBasic" nonBasicTypeName="rti::opcua::types::DataValue"/>
+                    </struct>
+                    <struct name="ReadRequest" nested="true">
+                        <member name="node_id" type="nonBasic" nonBasicTypeName="rti::opcua::types::NodeId"/>
+                        <member name="attribute_id" type="nonBasic" nonBasicTypeName="rti::opcua::types::AttributeId"/>
+                    </struct>
+                    <union name="ServiceRequestData" nested="true">
+                        <discriminator type="nonBasic" nonBasicTypeName="rti::opcua::types::services::ServiceOperation"/>
+                        <case>
+                            <caseDiscriminator value="SERVICE_OPERATION_READ"/>
+                            <member name="read_request" type="nonBasic" nonBasicTypeName="rti::opcua::types::services::ReadRequest"/>
+                        </case>
+                        <case>
+                            <caseDiscriminator value="SERVICE_OPERATION_WRITE"/>
+                            <member name="write_request" type="nonBasic" nonBasicTypeName="rti::opcua::types::services::WriteRequest"/>
+                        </case>
+                    </union>
+                    <struct name="ServiceRequest" nested="false">
+                        <member name="server_id" type="string" stringMaxLength="1024"/>
+                        <member name="request" type="nonBasic" nonBasicTypeName="rti::opcua::types::services::ServiceRequestData"/>
+                    </struct>
+                    <struct name="ReadReply" nested="true">
+                        <member name="value" type="nonBasic" nonBasicTypeName="rti::opcua::types::Variant"/>
+                    </struct>
+                    <union name="ServiceReplyData" nested="true">
+                        <discriminator type="nonBasic" nonBasicTypeName="rti::opcua::types::services::ServiceOperation"/>
+                        <case>
+                            <caseDiscriminator value="SERVICE_OPERATION_READ"/>
+                            <member name="read_reply" type="nonBasic" nonBasicTypeName="rti::opcua::types::services::ReadReply"/>
+                        </case>
+                        <case>
+                            <caseDiscriminator value="SERVICE_OPERATION_WRITE"/>
+                            <member name="write_reply" type="octet"/>
+                        </case>
+                    </union>
+                    <struct name="ServiceReply" nested="false">
+                        <member name="status_code" type="nonBasic" nonBasicTypeName="rti::opcua::types::StatusCode"/>
+                        <member name="reason_phrase" type="string"/>
+                        <member name="reply" type="nonBasic" nonBasicTypeName="rti::opcua::types::services::ServiceReplyData"/>
+                    </struct>
+                </module>
+            </module>
+        </module>
+    </module>
+</types>

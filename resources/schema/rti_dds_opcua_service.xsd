@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   (c) 2017-2020 Copyright, Real-Time Innovations, Inc. (RTI)
+   All rights reserved.
+
+   RTI grants Licensee a license to use, modify, compile, and create derivative
+   works of the Software solely in combination with RTI Connext DDS. Licensee
+   may redistribute copies of the Software provided that all such copies are
+   subject to this License. The Software is provided "as is", with no warranty
+   of any type, including any warranty for fitness for any purpose. RTI is
+   under no obligation to maintain or support the Software. RTI shall not be
+   liable for any incidental or consequential damages arising out of the use or
+   inability to use the Software. For purposes of clarity, nothing in this
+   License prevents Licensee from using alternate versions of DDS, provided
+   that Licensee may not combine or link such alternate versions of DDS with
+   the Software.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+    <xs:include schemaLocation="definitions/rti_service_common_definitions.xsd"/>
+
+    <!-- AttributeId -->
+    <xs:simpleType name="opcUaAttributeId">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NODEID" />
+            <xs:enumeration value="NODECLASS" />
+            <xs:enumeration value="BROWSENAME" />
+            <xs:enumeration value="DISPLAYNAME" />
+            <xs:enumeration value="DESCRIPTION" />
+            <xs:enumeration value="WRITEMASK" />
+            <xs:enumeration value="USERWRITEMASK" />
+            <xs:enumeration value="ISABSTRACT" />
+            <xs:enumeration value="SYMMETRIC" />
+            <xs:enumeration value="INVERSENAME" />
+            <xs:enumeration value="CONTAINSNOLOOPS" />
+            <xs:enumeration value="EVENTNOTIFIER" />
+            <xs:enumeration value="VALUE" />
+            <xs:enumeration value="DATATYPE" />
+            <xs:enumeration value="VALUERANK" />
+            <xs:enumeration value="ARRAYDIMENSIONS" />
+            <xs:enumeration value="ACCESSLEVEL" />
+            <xs:enumeration value="USERACCESSLEVEL" />
+            <xs:enumeration value="MINIMUMSAMPLINGINTERVAL" />
+            <xs:enumeration value="HISTORIZING" />
+            <xs:enumeration value="EXECUTABLE" />
+            <xs:enumeration value="USEREXECUTABLE" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- NodeId -->
+    <xs:complexType name="opcuaNodeId">
+        <xs:sequence>
+            <xs:element name="namespace_index" type="xs:unsignedShort">
+                <xs:annotation>
+                    <xs:documentation>
+                        <![CDATA[
+                        The NamespaceIndex locates a certain NodeId
+                        within the OPC UA Namespaces.]]>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="numeric_identifier" type="xs:integer"/>
+                <xs:element name="string_identifier" type="xs:string" />
+                <xs:element name="guid_identifier" type="xs:string" />
+                <xs:element name="opaque_identifier" type="xs:string" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Data Item -->
+    <xs:complexType name="opcUaNodeAttribute">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="node_id"
+                            type="opcuaNodeId">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            NodeId of the Node the attribute belongs to.]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="attribute_id"
+                            type="opcUaAttributeId">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            The AttributeId identifies the attribute to be
+                            accessed and evaluated, which is usually the VALUE
+                            attribute.]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="dds_topic_field_name"
+                      type="xs:string"
+                      use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[Name of DDS Topic field with which
+                    the NodeAttribute is associated.]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dds_sample_selector_ref"
+                      type="xs:string"
+                      use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[Name of the DDS sample selector with which
+                    the NodeAttribute is associated.]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Data Monitored Item -->
+    <xs:complexType name="opcuaNodeAttributeMonitoredItem">
+        <xs:complexContent>
+            <xs:extension base="opcUaNodeAttribute">
+                <xs:sequence>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="sampling_interval"
+                                    minOccurs="0"
+                                    type="xs:double">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    <![CDATA[
+                                    Fastest rate at which the NodeAttribute
+                                    should be accessed and evaluated.]]>
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="queue_size"
+                                    minOccurs="0"
+                                    type="xs:unsignedInt">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    <![CDATA[
+                                    Requested size of the MonitoredItem queue.
+                                    ]]>
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="discard_oldest"
+                                    minOccurs="0"
+                                    type="xs:boolean">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    <![CDATA[
+                                    A boolean parameter indicating whether the
+                                    oldest notification in the queue is
+                                    discarded when the queue is full. If false,
+                                    the last added Notification gets replaced
+                                    with the newest.]]>
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- MonitoredItems -->
+    <xs:complexType name="opcuaMonitoredItemSeq">
+        <xs:sequence>
+            <xs:element name="node_attribute"
+                        type="opcuaNodeAttributeMonitoredItem"
+                        minOccurs="0"
+                        maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- OPC UA Subscriptions Settings -->
+    <xs:complexType name="opcuaSubscriptionProtocol">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="requested_publishing_interval"
+                            type="xs:double"
+                            minOccurs="0"/>
+                <xs:element name="requested_lifetime_count"
+                            type="xs:integer"
+                            minOccurs="0"/>
+                <xs:element name="requested_max_keep_alive_count"
+                            type="xs:integer"
+                            minOccurs="0"/>
+                <xs:element name="max_notifications_per_publish"
+                            type="xs:integer"
+                            minOccurs="0"/>
+                <xs:element name="publishing_enabled"
+                            type="xs:boolean"
+                            minOccurs="0"/>
+                <xs:element name="priority"
+                            type="xs:integer"
+                            minOccurs="0"/>
+                </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- OPC UA Input -->
+    <xs:complexType name="opcuaInput">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="subscription_protocol"
+                            minOccurs="0"
+                            type="opcuaSubscriptionProtocol">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Configures the OPC UA Subscription to a set of
+                            monitored items.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="monitored_items"
+                            type="opcuaMonitoredItemSeq">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Monitored Items to add as part of the OPC UA
+                            Subscription
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[Name of the OPC UA Input.]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="opcua_connection_ref"
+                      type="xs:string"
+                      use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    Name of the OPC UA Connection associated which the OPC UA
+                    Subscription associated with the OPC UA Input shall be
+                    created. The value of the opcua_connection_ref attribute
+                    shall be equal to the name attribute of the
+                    <opcua_connection> tag.
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- OPC UA Output -->
+    <xs:complexType name="opcuaOutput">
+        <xs:sequence>
+            <xs:element name="node_attribute"
+                        type="opcUaNodeAttribute"
+                        minOccurs="0"
+                        maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[Name of the OPC UA Output.]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="opcua_connection_ref"
+                      type="xs:string"
+                      use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    Name of the OPC UA Connection to the OPC UA Server where
+                    the OPC UA Output will write.
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ddsSampleSelector">
+        <xs:sequence>
+            <xs:element name="filter" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        <![CDATA[
+                        Filter expression identifying samples that are selected
+                        within the sample selector.
+                        ]]>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name"
+                      type="xs:string"
+                      use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    Sample selector name.
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ddsSampleSelectorSeq">
+        <xs:sequence>
+            <xs:element name="selector"
+                        type="ddsSampleSelector"
+                        minOccurs="0"
+                        maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                    <![CDATA[
+                    Defines a sample selector. A sample selector provides a
+                    mechanism to select which samples are read from the
+                    DataReader's cache using a filter expression.
+                    ]]>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- DDS Endpoint -->
+    <xs:complexType name="ddsEndpoint">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="topic_name"
+                            type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Name of the DDS Topic.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="registered_type_name"
+                            type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Name of the registered type associated with the
+                            DDS Topic.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- DDS Input -->
+    <xs:complexType name="ddsInput">
+        <xs:complexContent>
+            <xs:extension base="ddsEndpoint">
+                <xs:sequence>
+                    <xs:element name="sample_selectors"
+                    type="ddsSampleSelectorSeq"
+                    minOccurs="0"
+                    maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <![CDATA[
+                                Pre-registers a number of sample selectors
+                                that allow choosing which samples from the
+                                DDS Input are read. These selectors can be
+                                associated with node attributes, which will
+                                only be assigned the value of a Topic field
+                                from a sample that matches fhe desired filter
+                                criteria.
+                                ]]>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="datareader_qos"
+                                type="dataReaderQosProfileChild"
+                                minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <![CDATA[
+                                QoS settings for the DataReader associated with
+                                the DDS Input.
+                                ]]>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[Name of the DDS Input.]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="domain_participant_ref"
+                              type="xs:string"
+                              use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Name of the DDS DomainParticipant under which the
+                            DDS DataReader associated with the input will be
+                            created. The domain_participant_ref attribute shall
+                            be equal to the name attribute of the
+                            <domain_participant> tag.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- DDS Output -->
+    <xs:complexType name="ddsOutput">
+        <xs:complexContent>
+            <xs:extension base="ddsEndpoint">
+                <xs:sequence>
+                    <xs:element name="datawriter_qos"
+                                type="dataWriterQosProfileChild"
+                                minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <![CDATA[
+                                QoS settings for the DataWriter associated with
+                                the DDS Output.
+                                ]]>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[Name of the DDS Output.]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="domain_participant_ref" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Name of the DDS DomainParticipant under which the
+                            DDS DataWriter associated with the Output will be
+                            created. The domain_participant_ref attribute shall
+                            be equal to the name attribute of the
+                            <domain_participant> tag.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- Mapping of an OPC UA Input to a DDS Output -->
+    <xs:complexType name="opcuaSubscription">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="opcua_input"
+                            type="opcuaInput">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Configures an OPC UA Subscription to monitor
+                            information in an OPC UA Server.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="dds_output"
+                            type="ddsOutput">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Configures a DDS Publication to publish the items
+                            monitored in the OPC UA Server over DDS.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    OPC UA Subscription Name.
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Mapping of a DDS Input to an OPC UA Output -->
+    <xs:complexType name="opcUaPublication">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="dds_input"
+                            type="ddsInput">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Configures a subscription to a DDS Topic. Fields of
+                            the type associated with this Topic can be assigned
+                            to attributes of Nodes in an OPC UA Server (i.e.,
+                            with OPC UA Outputs).
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="opcua_output"
+                            type="opcuaOutput">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Selects a number of items that can be updated in
+                            an OPC UA Server as a result of updates on DDS
+                            Topics.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    OPC UA Publication Name.
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- OPC UA Service Sets -->
+    <xs:complexType name="opcuaServiceSet">
+        <xs:sequence>
+            <xs:element name="attribute_service_set"
+                        minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        <![CDATA[
+                        Configures a DDS Service providing access to the
+                        Attribute Service Set on the remote OPC UA Server
+                        associated with the OPC UA Connection.
+                        ]]>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="enabled"
+                                    type="xs:boolean"
+                                    default="false" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="opcua_connection_ref"
+                      type="xs:string"
+                      use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    Name of the OPC UA Connection that will be used to perform
+                    Service invocations on an remote OPC UA Server. The value
+                    of the opcua_connection_ref attribute shall be equal to the
+                    name attribute of the <opcua_connection> tag.
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="domain_participant_ref"
+                    type="xs:string"
+                    use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    Name of a pre-defined DomainParticipant under which the
+                    DDS Service providing the specified OPC UA Service Set
+                    will be instantiated.
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <!-- OPC UA to DDS Bridge -->
+    <xs:complexType name="opcua2DdsBridge">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="service_set"
+                            minOccurs="0"
+                            type="opcuaServiceSet">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Provides the ability to expose OPC UA Service Sets
+                            of an OPC UA Server to DDS Clients by creating
+                            equivalent DDS Services using RPC over DDS.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="subscription"
+                            minOccurs="0"
+                            type="opcuaSubscription">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Provides the ability to create OPC UA Subscriptions
+                            (opcua_inputs) and map them to DDS Publications
+                            (dds_outputs) according according to a set of
+                            mapping rules.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="publication"
+                            minOccurs="0"
+                            type="opcUaPublication">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Provides the ability to subscribe to a DDS Topic
+                            (dds_input) and map fields of the DDS Topic to
+                            attributes of an OPC UA Node (opcua_outputs).
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[OPC UA to DDS Route Name]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Local Connection Settings -->
+    <xs:complexType name="opcUaLocalConnectionSettings">
+        <xs:all>
+            <xs:element name="protocol_version"
+                        type="xs:integer"
+                        minOccurs="0" />
+            <xs:element name="send_buffer_size"
+                        type="xs:integer"
+                        minOccurs="0" />
+            <xs:element name="recv_buffer_size"
+                        type="xs:integer"
+                        minOccurs="0" />
+            <xs:element name="max_message_size"
+                        type="xs:integer"
+                        minOccurs="0" />
+            <xs:element name="max_chunk_count"
+                        type="xs:integer"
+                        minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+
+    <!-- OPC UA Connection -->
+    <xs:complexType name="opcuaConnection">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="timeout"
+                            type="xs:double"
+                            minOccurs="0"/>
+                <xs:element name="secure_channel_lifetime"
+                            type="xs:integer"
+                            minOccurs="0"/>
+                <xs:element name="local_connection"
+                            type="opcUaLocalConnectionSettings"
+                            minOccurs="0"/>
+                <!-- <xs:element name="run_asynchronous_timeout"
+                            type="xs:nonNegativeInteger"
+                            minOccurs="0"
+                            maxOccurs="1" /> -->
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[OPC UA Server Connection Name.]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="server_endpoint_url"
+                      type="xs:string"
+                      use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    Endpoint URL of the remote OPC UA Server the connection must
+                    established with.]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <!-- DDS DomainParticipant -->
+    <xs:complexType name="ddsDomainParticipant">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="participant_qos"
+                            type="domainParticipantQosProfileChild"
+                            minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                                <![CDATA[
+                                Configures the QoS settings of the
+                                DomainParticipant.]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="register_type"
+                            minOccurs="0"
+                            maxOccurs="unbounded"
+                            type="registerType">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Registers one of the DataTypes defined in the
+                                <types> section.
+                                ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[DDS DomainParticipant Identifier.]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="domain_id" type="xs:nonNegativeInteger">
+            <xs:annotation>
+                <xs:documentation xml:lang="en-US">
+                    Specifies the domain ID the participant is bound. It
+                    overrides the one specified in the bound domain and/or base
+                    participant
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Annotation Type -->
+    <xs:complexType name="annotationType">
+        <xs:all>
+            <xs:element name="documentation"
+                        type="xs:string"
+                        minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
+    <!-- OPC UA/DDS Gateway Configuration -->
+    <xs:complexType name="ddsOpcUaService">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="annotation"
+                            minOccurs="0"
+                            type="annotationType">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <![CDATA[
+                                Optional field to describe instances of the
+                                OPC UA/DDS Gateway.
+                                ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="opcua_connection"
+                            minOccurs="0"
+                            maxOccurs="unbounded"
+                            type="opcuaConnection">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Defines a connection of the OPC UA/DDS Gateway to
+                            an external OPC UA Server. This connection may be
+                            instantiated by an OPC UA Input mapped to a DDS
+                            Output or an Service Set Configuration.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="domain_participant"
+                            minOccurs="0"
+                            maxOccurs="unbounded"
+                            type="ddsDomainParticipant">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Provides the required information to create a DDS
+                            DomainParticipant that can be used by OPC UA to
+                            DDS Bridges and DDS to OPC UA Bridges.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="opcua_to_dds_bridge"
+                            minOccurs="0"
+                            maxOccurs="unbounded"
+                            type="opcua2DdsBridge">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Defines an OPC UA to DDS Bridge that can be used to:
+                            (1) define OPC UA Subscriptions (opcua_inputs) and
+                            map them to DDS Publications (dds_outputs) according
+                            to a set of mapping rules; and (2) expose OPC UA
+                            Service Sets (View, Query, Attribute, and Method)
+                            to DDS Applications defining the equivalent DDS
+                            Services.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[Service Configuration Name]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Root -->
+    <xs:complexType name="ddsOpcUaGateway">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="types">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Provides the ability to define types that may
+                            be registered by the different DomainParticipants
+                            instantiated by the Gateway.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:group ref="moduleElements"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="qos_library"
+                            type="qosLibrary"
+                            minOccurs="0"
+                            maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Provides the ability to group QoS Profiles that may
+                            be used by DDS entities instantiated by the
+                            Gateway.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="ddsopcua_service"
+                            maxOccurs="unbounded"
+                            type="ddsOpcUaService" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Configures an OPC UA/DDS Gateway. More than one
+                            OPC UA/DDS Gateway configuration is allowed, but
+                            only one configuration can be loaded at runtime.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="dds"  type="ddsOpcUaGateway"/>
+
+</xs:schema>
