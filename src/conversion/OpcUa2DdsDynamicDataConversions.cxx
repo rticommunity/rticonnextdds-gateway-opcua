@@ -703,26 +703,29 @@ void opc_ua_array_dimensions_to_dds_dynamic_data_array_dimensions(
         DynamicData& dynamicdata_variant,
         const opcua::sdk::types::Variant& opcua_variant)
 {
-    std::vector<uint32_t> array_dimensions;
     if (UA_Variant_isScalar(opcua_variant.get_const_ref())
         || opcua_variant.get_const_ref()->type == 0) {
-        // noop
-    } else if (opcua_variant.get_const_ref()->arrayDimensionsSize == 0) {
-        /*
-         * If arrayDimensionsSize is zero we assume the Variant holds an
-         * unbounded one-dimensional array, which is represented with
-         * an array_dimensions array of one element equal to zero.
-         */
-        array_dimensions.push_back(0);
+        dynamicdata_variant.clear_member("array_dimensions");
     } else {
-        // Otherwise we copy the arrayDimensions of the Variant.
-        array_dimensions.assign(
-                opcua_variant.get_const_ref()->arrayDimensions,
-                opcua_variant.get_const_ref()->arrayDimensions
-                        + opcua_variant.get_const_ref()->arrayDimensionsSize);
-    }
+        std::vector<uint32_t> array_dimensions;
+        if (opcua_variant.get_const_ref()->arrayDimensionsSize == 0) {
+            /*
+             * If arrayDimensionsSize is zero we assume the Variant holds an
+             * unbounded one-dimensional array, which is represented with
+             * an array_dimensions array of one element equal to zero.
+             */
+            array_dimensions.push_back(0);
+        } else {
+            // Otherwise we copy the arrayDimensions of the Variant.
+            array_dimensions.assign(
+                    opcua_variant.get_const_ref()->arrayDimensions,
+                    opcua_variant.get_const_ref()->arrayDimensions
+                            + opcua_variant.get_const_ref()
+                                      ->arrayDimensionsSize);
+        }
 
-    dynamicdata_variant.set_values("array_dimensions", array_dimensions);
+        dynamicdata_variant.set_values("array_dimensions", array_dimensions);
+    }
 }
 
 void opc_ua_variant_value_to_dds_dynamic_data_variant_value(

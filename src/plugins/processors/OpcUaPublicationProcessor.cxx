@@ -134,7 +134,7 @@ void PublicationProcessor::on_data_available(routing::processor::Route& route)
 
                     route.output<DynamicData>(
                                  "OpcUaAttributeServiceSet_Request")
-                            .write(request_sample_.get());
+                            .write(request_sample_.get(), sample->info());
                 }
             }
         }

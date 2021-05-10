@@ -17,12 +17,14 @@
 setlocal EnableDelayedExpansion
 
 set appName=${LAUNCH_EXECUTABLE_NAME}
-set executableName=${LAUNCH_EXECUTABLE_NAME}.exe
+set executableName=${LAUNCH_EXECUTABLE_NAME}app.exe
 set scriptVersion=${CONNEXTDDS_VERSION}
 
 set dir=%~dp0
 
+set copyWorkspace=false
 set runWithinModule=false
+set needsSharedLibraries=false
 call "%dir%..\resource\scripts\rticommon.bat"
 if not !ERRORLEVEL! == 0  (
     exit /b 1

@@ -34,14 +34,14 @@ static DDS_Boolean terminate_service = false;
 static void shutdown_hook_fnc(void*)
 {
     terminate_service = DDS_BOOLEAN_TRUE;
-    GATEWAYLog_local(&DDSOPCUA_LOG_ANY_s, "Terminating service");
+    std::cout << "Terminating service" << std::endl;
 }
 
 extern "C" void signal_handler(int signal)
 {
     switch (signal) {
     case SIGINT:
-        GATEWAYLog_warn(&DDSOPCUA_LOG_ANY_s, "Received SIGINT signal");
+        std::cout << "Received SIGINT signal" << std::endl;
         shutdown_hook_fnc(nullptr);
         break;
     }
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
                     &terminate_service);
         }
     } catch (const std::exception& exception) {
-        GATEWAYLog_exception(&DDSOPCUA_LOG_ANY_FAILURE_s, exception.what());
+        std::cerr << "Error: " << exception.what() << std::endl;
         retcode = 1;
     }
 

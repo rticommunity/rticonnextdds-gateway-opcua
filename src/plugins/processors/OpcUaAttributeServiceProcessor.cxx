@@ -66,7 +66,7 @@ void AttributeServiceSetProcessor::on_data_available(
                 "Received AttributeServiceSet request...");
 
         route.output<DynamicData>("OpcUaAttributeServiceSet_Request")
-                .write(request_sample->data());
+                .write(request_sample->data(), request_info);
 
         LoanedSamples<DynamicData, dds::sub::SampleInfo> reply_samples =
                 route.input<DynamicData>("OpcUaAttributeServiceSet_Reply")

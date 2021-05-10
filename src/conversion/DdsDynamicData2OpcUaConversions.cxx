@@ -733,8 +733,7 @@ void dds_dynamic_data_member_to_dds_dynamic_data_variant(
         const DynamicData& data,
         const std::string& member_name)
 {
-    std::vector<uint32_t> array_dimensions;
-    variant.set_values("array_dimensions", array_dimensions);
+    variant.clear_member("array_dimensions");
 
     dds::core::xtypes::TypeKind kind =
             data.member_info(member_name).member_kind();
@@ -809,8 +808,6 @@ void dds_dynamic_data_member_to_dds_dynamic_data_variant(
                 data,
                 member_name);
     } break;
-        //     case dds::core::xtypes::TypeKind::SEQUENCE_TYPE: {
-        //     } break;
     default:
         RTI_THROW_GATEWAY_EXCEPTION(
                 &DDSOPCUA_LOG_ANY_FAILURE_s,
