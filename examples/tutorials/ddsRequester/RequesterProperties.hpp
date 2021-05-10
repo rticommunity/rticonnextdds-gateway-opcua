@@ -41,7 +41,7 @@ struct RequesterProperties {
     std::string value_str;
     rti::opcua::types::BuiltinTypeKind value_type;
     int dds_domain_id;
-    int32_t iterations;
+    uint32_t iterations;
     uint32_t period_msec;
     uint32_t timeout;
 

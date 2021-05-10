@@ -123,7 +123,7 @@ dds::core::xtypes::StructType create_type()
     return mytype;
 }
 
-void update_sample(dds::core::xtypes::DynamicData& sample, uint32_t i)
+void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
 {
     // Boolean
     bool bool_value = i % 2 ? true : false;

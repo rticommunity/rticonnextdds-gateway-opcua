@@ -493,7 +493,7 @@ opc_ua_variant_value_to_dds_dynamic_data_variant_value(
 {
     // If the variant contains a scalar copy 1 element, otherwise copy
     // opcua_value.arrayLength elements
-    uint32_t array_length =
+    size_t array_length =
             UA_Variant_isScalar(&opcua_value) ? 1 : opcua_value.arrayLength;
 
     std::vector<DDS_TYPE> v;
@@ -537,8 +537,9 @@ opc_ua_variant_value_to_dds_dynamic_data_variant_value(
 {
     // If the variant contains a scalar iterate once, otherwise iterate
     // opcua_value.arrayLength times
-    uint32_t array_length =
-            UA_Variant_isScalar(&opcua_value) ? 1 : opcua_value.arrayLength;
+    uint32_t array_length = UA_Variant_isScalar(&opcua_value)
+            ? 1
+            : static_cast<uint32_t>(opcua_value.arrayLength);
 
     LoanedDynamicData variant_array = dd_value.loan_value(dd_member_name);
 

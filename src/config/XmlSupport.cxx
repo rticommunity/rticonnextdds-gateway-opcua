@@ -245,7 +245,8 @@ XmlSupport::native_xmlutilsobject XmlSupport::to_router_configuration()
             transformer_.get(),
             xml_root_,
             &XmlTransformationParams::transformation_params()[0],
-            XmlTransformationParams::transformation_params().size());
+            static_cast<int>(
+                    XmlTransformationParams::transformation_params().size()));
     if (transformed == nullptr) {
         RTI_THROW_GATEWAY_EXCEPTION(
                 &DDSOPCUA_LOG_TRANSFORMER_TRANSFORM_FAILURE_ss,

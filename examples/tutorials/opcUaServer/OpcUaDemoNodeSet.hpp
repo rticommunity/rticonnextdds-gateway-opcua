@@ -792,7 +792,7 @@ public:
             const UA_NodeId& node_id,
             const size_t type_id)
     {
-        static UA_UInt64 i = 1;
+        static UA_Int64 i = 1;
         UA_Variant variant;
         switch (type_id) {
         case UA_TYPES_BOOLEAN: {
@@ -872,7 +872,8 @@ public:
             UA_Server_writeValue(server, node_id, variant);
         } break;
         case UA_TYPES_FLOAT: {
-            UA_Float value = (i % UA_INT32_MAX) * 0.5;
+            float point5 = 0.5;
+            UA_Float value = (i % UA_INT32_MAX) * point5;
             UA_Variant_setScalar(
                     &variant,
                     (void*) &value,
@@ -1061,7 +1062,7 @@ public:
             const size_t type_id,
             const int array_length)
     {
-        static UA_UInt64 seed = 1;
+        static UA_Int64 seed = 1;
         UA_Variant variant;
         switch (type_id) {
         case UA_TYPES_BOOLEAN: {
@@ -1188,7 +1189,8 @@ public:
         case UA_TYPES_FLOAT: {
             UA_Float* value = new UA_Float[array_length];
             for (int i = 0; i < array_length; i++) {
-                value[i] = (seed % UA_INT32_MAX) * 0.5;
+                float point5 = 0.5;
+                value[i] = (seed % UA_INT32_MAX) * point5;
             }
             UA_Variant_setArray(
                     &variant,

@@ -44,7 +44,7 @@ void run_application(bool& running)
 
     std::cout << "Publishing MyTopic samples..." << std::endl;
 
-    uint32_t i = 0;
+    int32_t i = 0;
     while (running) {
         update_sample(sample, ++i);
         writer.write(sample);

@@ -181,14 +181,6 @@ void Client::disconnect()
     GATEWAYLog_local(&DDSOPCUA_LOG_ANY_s, "Client disconnected");
 }
 
-void Client::read_attribute(
-        sdk::types::Variant& attribute_value,
-        const sdk::types::NodeId& node_id,
-        const sdk::types::AttributeId& attribute_id)
-{
-    UA_ReadRequest read_request;
-}
-
 void Client::read_value_attribute(
         sdk::types::Variant& value,
         const sdk::types::NodeId& node_id)

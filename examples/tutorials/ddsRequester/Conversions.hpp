@@ -56,7 +56,7 @@ bool string_to_node_id(
         std::cerr << "Error: namespace index must have an integer value\n.";
         return false;
     }
-    node_id.namespace_index(namespace_index);
+    node_id.namespace_index(static_cast<uint16_t>(namespace_index));
 
     std::string identifier_str = node_id_str.substr(separator + 1);
     // Set Identifier

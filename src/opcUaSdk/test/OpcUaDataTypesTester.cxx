@@ -265,7 +265,8 @@ TEST(OpcUaDataTypesTester, AttributeIdTransformations)
 TEST(OpcUaDataTypesTester, NodeIdTransformations)
 {
     {
-        rti::opcua::sdk::types::NodeId node_id();
+        rti::opcua::sdk::types::NodeId node_id;
+		ASSERT_NE(node_id.get_const_ref(), nullptr);
     }
     {
         rti::opcua::sdk::types::NodeId source(1, 1001);

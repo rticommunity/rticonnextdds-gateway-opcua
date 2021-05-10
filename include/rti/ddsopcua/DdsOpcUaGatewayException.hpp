@@ -38,7 +38,7 @@ static void initialize_exception_message(
             throwing_context);
     RTIOsapiUtility_vsnprintf(
             &message[0] + strlen(message.c_str()),
-            (size_t) RTI_LOG_MSG_SIZE_MAX - strlen(message.c_str()),
+            static_cast<int>(RTI_LOG_MSG_SIZE_MAX - strlen(message.c_str())),
             log_message->format,
             ap);
 }

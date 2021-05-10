@@ -631,7 +631,7 @@ void dds_dynamic_data_array_member_to_dds_dynamic_data_variant(
                 &variant.native(),
                 "value.bool_value",
                 DDS_DYNAMIC_DATA_MEMBER_ID_UNSPECIFIED,
-                values.size(),
+                static_cast<DDS_UnsignedLong>(values.size()),
                 &values[0]);
         check_dynamic_data_return_code(
                 retcode,
@@ -643,7 +643,7 @@ void dds_dynamic_data_array_member_to_dds_dynamic_data_variant(
                 &variant.native(),
                 "value.byte_value",
                 DDS_DYNAMIC_DATA_MEMBER_ID_UNSPECIFIED,
-                values.size(),
+                static_cast<DDS_UnsignedLong>(values.size()),
                 &values[0]);
         check_dynamic_data_return_code(
                 retcode,
@@ -660,7 +660,7 @@ void dds_dynamic_data_array_member_to_dds_dynamic_data_variant(
                 &variant.native(),
                 "value.uint16_value",
                 DDS_DYNAMIC_DATA_MEMBER_ID_UNSPECIFIED,
-                values.size(),
+                static_cast<DDS_UnsignedLong>(values.size()),
                 &values[0]);
         check_dynamic_data_return_code(retcode, "Failed to set uint16_t array");
     } break;
@@ -709,7 +709,7 @@ void dds_dynamic_data_array_member_to_dds_dynamic_data_variant(
                 const_cast<DynamicData&>(data).loan_value(member_name);
         rti::core::xtypes::LoanedDynamicData string_array =
                 variant.loan_value("value.string_value");
-        for (int i = 1; i < values.get().member_count(); i++) {
+        for (uint32_t i = 1; i < values.get().member_count(); i++) {
             string_array.get().value<std::string>(
                     i,
                     values.get().value<std::string>(i));

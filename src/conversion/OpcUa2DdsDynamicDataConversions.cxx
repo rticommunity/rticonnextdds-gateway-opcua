@@ -235,7 +235,7 @@ inline void set_dynamic_data_member<UA_ByteString, opcua::types::ByteString>(
             &dd_bytestring.native(),
             dds_member_name.c_str(),
             DDS_DYNAMIC_DATA_MEMBER_ID_UNSPECIFIED,
-            opcua_data->length,
+            static_cast<DDS_UnsignedLong>(opcua_data->length),
             static_cast<uint8_t*>(opcua_data->data));
     check_dynamic_data_return_code(retcode, "Failed to get ByteString value");
 }
@@ -256,7 +256,7 @@ inline void set_dynamic_data_member<UA_ByteString, opcua::types::ByteString>(
             &dd_bytestring.native(),
             dds::core::null,
             dds_member_id,
-            opcua_data->length,
+            static_cast<DDS_UnsignedLong>(opcua_data->length),
             static_cast<uint8_t*>(opcua_data->data));
 }
 

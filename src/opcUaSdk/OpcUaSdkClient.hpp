@@ -80,11 +80,6 @@ public:
             const uint32_t subscription_id,
             const uint32_t monitored_item_id);
 
-    void read_attribute(
-            sdk::types::Variant& attribute_value,
-            const sdk::types::NodeId& node_id,
-            const sdk::types::AttributeId& attribute_id);
-
     sdk::types::BuiltinTypeKind read_value_attribute_type_kind(
             const sdk::types::NodeId& node_id);
 
