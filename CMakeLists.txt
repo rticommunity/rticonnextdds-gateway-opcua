@@ -105,6 +105,7 @@ if(WIN32)
     set(script_extension ".bat")
 endif()
 
+set(LAUNCH_EXECUTABLE_NAME "rtiddsopcuagateway")
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/resources/templates/launch_script${script_extension}.in"
     "${CMAKE_CURRENT_BINARY_DIR}/scripts/${LAUNCH_EXECUTABLE_NAME}${script_extension}"
@@ -117,6 +118,23 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/third_party/open62541"
     EXCLUDE_FROM_ALL
 )
 
+set_target_properties(open62541 PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    PDB_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+)
+foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${output_config} output_config)
+    set_target_properties(open62541 PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        LIBRARY_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        ARCHIVE_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        PDB_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        COMPILE_PDB_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    )
+endforeach()
 
 # Build Gateway
 
@@ -212,19 +230,26 @@ target_link_libraries(rtiddsopcuagateway-lib
 )
 
 set_target_properties(rtiddsopcuagateway-lib PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "bin"
-    LIBRARY_OUTPUT_DIRECTORY "bin"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     OUTPUT_NAME "rtiddsopcuagateway"
 )
+
+if(WIN32)
+    set_target_properties(rtiddsopcuagateway-lib PROPERTIES
+        WINDOWS_EXPORT_ALL_SYMBOLS TRUE
+    )
+endif()
 
 # Multiconfiguration projects have different output directories
 # for each CMAKE_CONFIGURATION_TYPES
 foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${output_config} output_config)
     set_target_properties(rtiddsopcuagateway-lib PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY_${output_config} "bin"
-        LIBRARY_OUTPUT_DIRECTORY_${output_config} "bin"
-
+        RUNTIME_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        LIBRARY_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        ARCHIVE_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
     )
 endforeach()
 
@@ -247,9 +272,8 @@ target_link_libraries(rtiddsopcuagateway-app
 )
 
 set_target_properties(rtiddsopcuagateway-app PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "bin"
-    LIBRARY_OUTPUT_DIRECTORY "bin"
-    OUTPUT_NAME "rtiddsopcuagateway"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    OUTPUT_NAME "rtiddsopcuagatewayapp"
 )
 
 # Multiconfiguration projects have different output directories
@@ -257,18 +281,24 @@ set_target_properties(rtiddsopcuagateway-app PROPERTIES
 foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${output_config} output_config)
     set_target_properties(rtiddsopcuagateway-app PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY_${output_config} "bin"
+        RUNTIME_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
     )
 endforeach()
 
-install(TARGETS rtiddsopcuagateway-lib rtiddsopcuagateway-app
-    LIBRARY DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+install(TARGETS rtiddsopcuagateway-app
     RUNTIME DESTINATION resource/app/bin/${CONNEXTDDS_ARCH}
-    ARCHIVE DESTINATION lib/${CONNEXTDDS_ARCH}
+)
+
+install(TARGETS rtiddsopcuagateway-lib
+    LIBRARY DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+    RUNTIME DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+    ARCHIVE DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
 )
 
 install(TARGETS open62541
     LIBRARY DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+    RUNTIME DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+    ARCHIVE DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
 )
 
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
@@ -277,7 +307,7 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
 install(DIRECTORY "${CMAKE_BINARY_DIR}/scripts/"
-    DESTINATION bin
+    DESTINATION "bin"
     FILE_PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
@@ -341,12 +371,29 @@ if (RTIGATEWAY_BUILD_TESTS)
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest"
         EXCLUDE_FROM_ALL
     )
+    set_target_properties(gtest PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        PDB_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    )
+    foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
+        string(TOUPPER ${output_config} output_config)
+        set_target_properties(gtest PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+            LIBRARY_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+            ARCHIVE_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+            PDB_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+            COMPILE_PDB_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        )
+    endforeach()
 
     connextdds_copy_files(
-    INPUT_FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/IntegrationTestTypes.xml"
-    OUTPUT_DIR
-        "${CMAKE_CURRENT_BINARY_DIR}/resources/xml"
+        INPUT_FILES
+            "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/IntegrationTestTypes.xml"
+        OUTPUT_DIR
+            "${CMAKE_CURRENT_BINARY_DIR}/resources/xml"
     )
 
     connextdds_rtiddsgen_run(
@@ -358,7 +405,7 @@ if (RTIGATEWAY_BUILD_TESTS)
         UNBOUNDED
     )
 
-    add_executable(rtiddsopcuagateway-test
+    set(rtiddsopcua_test_sources
         "${CMAKE_CURRENT_SOURCE_DIR}/src/conversion/test/ConversionTests.cxx"
         "${CMAKE_CURRENT_SOURCE_DIR}/examples/tutorials/opcUaServer/OpcUaDemoNodeSet.hpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/examples/tutorials/opcUaServer/OpcUaDemoServer.hpp"
@@ -370,6 +417,9 @@ if (RTIGATEWAY_BUILD_TESTS)
         "${CMAKE_CURRENT_SOURCE_DIR}/src/test/OpcUaTutorialServer.hpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/test/IntegrationTest.cxx"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/test/Main.cxx"
+    )
+    add_executable(rtiddsopcuagateway-test
+        ${rtiddsopcua_test_sources}
         ${IntegrationTestTypes_CXX11_HEADERS}
         ${IntegrationTestTypes_CXX11_SOURCES}
     )
@@ -387,8 +437,8 @@ if (RTIGATEWAY_BUILD_TESTS)
         rtiddsopcuagateway-lib
     )
     set_target_properties(rtiddsopcuagateway-test PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "bin"
-        LIBRARY_OUTPUT_DIRECTORY "bin"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
         OUTPUT_NAME "rtiddsopcuagateway-tester"
     )
 
@@ -397,14 +447,24 @@ if (RTIGATEWAY_BUILD_TESTS)
     foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
         string(TOUPPER ${output_config} output_config)
         set_target_properties(rtiddsopcuagateway-test PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY_${output_config} "bin"
+            RUNTIME_OUTPUT_DIRECTORY_${output_config} "${CMAKE_CURRENT_BINARY_DIR}/bin"
         )
     endforeach()
 
-    gtest_discover_tests(rtiddsopcuagateway-test
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        PROPERTIES
-            VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    set(env_var "LD_LIBRARY_PATH")
+    set(env_sep ":")
+    if (WIN32)
+        set(env_var "PATH")
+        set(env_sep "\;")
+    elseif(APPLE)
+        set(env_var "DYLD_LIBRARY_PATH")
+    endif()
+    gtest_add_tests(TARGET rtiddsopcuagateway-test
+        SOURCES ${rtiddsopcua_test_sources}
+        TEST_LIST ctest_list
+    )
+    set_tests_properties(${ctest_list} PROPERTIES
+        ENVIRONMENT "${env_var}=$<SHELL_PATH:${CMAKE_CURRENT_BINARY_DIR}/bin>${env_sep}$<SHELL_PATH:${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}>"
     )
 
     if (RTIGATEWAY_ENABLE_CODE_COVERAGE)
