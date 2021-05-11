@@ -220,6 +220,6 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     }
 }
 
-} }}
+}}}  // namespace rti::ddsopcua::tutorials
 
-#endif // RTI_DDSOPCUA_TUTORIAL_DEMO_PUBLISHER_HPP_
+#endif  // RTI_DDSOPCUA_TUTORIAL_DEMO_PUBLISHER_HPP_

@@ -23,9 +23,7 @@
 
 namespace rti { namespace ddsopcua { namespace service {
 
-ParameterManager::ParameterManager()
-        : executable_name_(""),
-          arguments_({})
+ParameterManager::ParameterManager() : executable_name_(""), arguments_({})
 {
     arguments_.push_back(Argument(
             "cfgFile",

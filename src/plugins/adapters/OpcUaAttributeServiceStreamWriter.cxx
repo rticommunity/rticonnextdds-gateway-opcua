@@ -37,7 +37,8 @@ int OpcUaAttributeServiceStreamWriter::write(
     using namespace rti::opcua;
 
     LoanedDynamicData request = sample_seq.at(0)->loan_value("request");
-    switch (static_cast<types::services::ServiceOperation>(request.get().discriminator_value())) {
+    switch (static_cast<types::services::ServiceOperation>(
+            request.get().discriminator_value())) {
     case types::services::ServiceOperation::SERVICE_OPERATION_READ: {
         // Get NodeId
         LoanedDynamicData read = request.get().loan_value("read_request");

@@ -49,7 +49,6 @@ public:
 
 
 private:
-
     std::string app_version_string() const;
 
     void print_usage() const;
@@ -62,7 +61,6 @@ private:
     rti::ddsopcua::service::ApplicationProperty application_property_;
     rti::ddsopcua::Gateway gateway_;
     rti::core::ProductVersion app_version_;
-
 };
 
 }}  // namespace rti::ddsopcua

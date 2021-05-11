@@ -102,7 +102,12 @@ uint32_t Requester::read_request(
         const rti::opcua::types::NodeId& node_id,
         const uint32_t timeout_sec)
 {
-    return impl::read_request(value, requester_, server_id, node_id, timeout_sec);
+    return impl::read_request(
+            value,
+            requester_,
+            server_id,
+            node_id,
+            timeout_sec);
 }
 
 }}}  // namespace rti::ddsopcua::requester

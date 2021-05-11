@@ -104,8 +104,8 @@ std::string Application::app_version_string() const
 {
     char dst[DDS_PRODUCTVERSION_MAX_STRING_SIZE];
     DDS_ProductVersion_to_string(
-                const_cast<DDS_ProductVersion_t*>(&(app_version_.native())),
-                dst);
+            const_cast<DDS_ProductVersion_t*>(&(app_version_.native())),
+            dst);
 
     std::string dst_str(dst);
     if (app_version_.revision_version() == 0) {

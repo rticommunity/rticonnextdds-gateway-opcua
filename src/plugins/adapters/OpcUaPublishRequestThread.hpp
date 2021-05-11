@@ -49,7 +49,9 @@ public:
 
     ~AsyncClientThread()
     {
-        GATEWAYLog_local(&DDSOPCUA_LOG_ANY_s, "Deleting asynchronous client thread");
+        GATEWAYLog_local(
+                &DDSOPCUA_LOG_ANY_s,
+                "Deleting asynchronous client thread");
     }
     /**
      * This method sends periodic SendPublishRequests. To avoid spinning the
@@ -71,9 +73,13 @@ public:
     void stop()
     {
         exit_condition_ = true;
-        GATEWAYLog_local(&DDSOPCUA_LOG_ANY_s, "Stopping asynchronous client thread");
+        GATEWAYLog_local(
+                &DDSOPCUA_LOG_ANY_s,
+                "Stopping asynchronous client thread");
         join();
-        GATEWAYLog_local(&DDSOPCUA_LOG_ANY_s, "Asynchronous client thread stopped");
+        GATEWAYLog_local(
+                &DDSOPCUA_LOG_ANY_s,
+                "Asynchronous client thread stopped");
     }
 
     /**

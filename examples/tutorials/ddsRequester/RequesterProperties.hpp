@@ -51,7 +51,8 @@ struct RequesterProperties {
               server_id(),
               node_id(),
               variant(),
-              value_type(rti::opcua::types::BuiltinTypeKind::DIAGNOSTICINFO_TYPE),
+              value_type(
+                      rti::opcua::types::BuiltinTypeKind::DIAGNOSTICINFO_TYPE),
               dds_domain_id(0),
               iterations(1),
               period_msec(0),

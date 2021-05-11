@@ -29,14 +29,17 @@ struct RTI_RoutingServiceProductInfo {
 
 struct RTI_RoutingServiceHeapMonitorProperty {
     /* @brief Output directory where files are dumped */
-    char *output_dir;
+    char* output_dir;
     /* @brief A name to be used in the snapshot files */
-    char *snapshot_name;
+    char* snapshot_name;
     /* @brief Period at which snapshots are taken */
     int snapshot_period_millis;
 };
 
-#define RTI_RoutingServiceHeapMonitorProperty_INITIALIZER {nullptr, nullptr, 0}
+    #define RTI_RoutingServiceHeapMonitorProperty_INITIALIZER \
+        {                                                     \
+            nullptr, nullptr, 0                               \
+        }
 
 extern void RTI_RoutingService_execute_heap_snapshot_loop(
         const struct RTI_RoutingServiceHeapMonitorProperty* property,

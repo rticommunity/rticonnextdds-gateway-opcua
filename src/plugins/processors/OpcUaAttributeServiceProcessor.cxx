@@ -79,7 +79,9 @@ void AttributeServiceSetProcessor::on_data_available(
         route.output<DynamicData>("DdsAttributeServiceSet_Reply")
                 .write(reply_samples[0].data(), reply_info);
 
-        GATEWAYLog_local(&DDSOPCUA_LOG_ANY_s, "Sent AttributeServiceSet reply...");
+        GATEWAYLog_local(
+                &DDSOPCUA_LOG_ANY_s,
+                "Sent AttributeServiceSet reply...");
     }
 }
 

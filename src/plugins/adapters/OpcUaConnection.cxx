@@ -115,7 +115,7 @@ rti::routing::adapter::StreamReader* OpcUaConnection::create_stream_reader(
         stream_reader = opcua_subs_sr;
 
         if (async_stream_readers_.size() == 0) {
-                opcua_client_async_thread_.start();
+            opcua_client_async_thread_.start();
         }
         async_stream_readers_.push_back(
                 reinterpret_cast<uintptr_t>(stream_reader));

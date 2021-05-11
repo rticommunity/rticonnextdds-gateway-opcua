@@ -34,5 +34,4 @@ void check_dynamic_data_return_code(
     }
 }
 
-
 }}}  // namespace rti::ddsopcua::conversion

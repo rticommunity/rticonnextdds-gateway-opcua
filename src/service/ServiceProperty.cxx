@@ -35,9 +35,9 @@ GatewayProperty::GatewayProperty()
 {
 }
 
-    GatewayProperty::GatewayProperty(
-            const std::string& service_name,
-            const std::string& cfg_file)
+GatewayProperty::GatewayProperty(
+        const std::string& service_name,
+        const std::string& cfg_file)
         : cfg_file_(cfg_file),
           service_name_(service_name),
           executable_path_(""),
