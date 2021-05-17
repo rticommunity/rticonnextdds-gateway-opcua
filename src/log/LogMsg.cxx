@@ -19,53 +19,54 @@
 
 const RTILogMessage DDSOPCUA_LOG_OPCUA_ADD_MONITORED_ITEM_FAILED_ss = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 0,
-    "!add monitored item '%s' to OPC UA subscription failed with error '%s'\n"
+    "Error adding monitored item '%s' to OPC UA subscription. The operation "
+    "returned '%s'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_OPCUA_DELETE_SUBSCRIPTION_FAILED_u = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 1,
-    "!delete OPC UA subscription '%u'\n"
+    "Error deleting OPC UA subscription '%u'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_OPCUA_CREATE_SUBSCRIPTION_FAILED_u = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 2,
-    "!create OPC UA subscription '%u'\n"
+    "Error creating OPC UA subscription '%u'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_OPCUA_CONNECT_SERVER_FAILED_s = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 3,
-    "!connect to OPC UA server '%s'\n"
+    "Error connecting to OPC UA server '%s'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_XML_LOOKUP_ATTRIBUTE_ss = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 4,
-    "!lookup attribute '%s' from object '%s'\n"
+    "Cannot lookup attribute '%s' from object '%s'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_XML_CONVERT_OBJECT_s = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 5,
-    "!convert content from XML object '%s' to the appropriate type\n"
+    "Cannot convert content from XML object '%s' to the appropriate type\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_XML_UNSUPPORTED_NODE_IDENTIFIER_s = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 6,
-    "!unsupported Node Identifier in '%s'. Only Numeric and String "
+    "Unsupported Node Identifier in '%s'. Only Numeric and String "
     "Identifiers are supported\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_SEMAPHORE_TAKE_FAILURE_s = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 7,
-    "!take semaphore with status error '%s'\n"
+    "Cannot take semaphore. Opeartion returned status error '%s'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_THREAD_CREATE_FAILURE_s = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 8,
-    "!create thread '%s'\n"
+    "Cannot create thread '%s'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_OPCUA_RUN_ASYNC_FAILURE_d = {
     PRODUCT_WAVEWORKS | MODULE_DDSOPCUA | RTI_SUBMODULE_MASK_ALL | 9,
-    "!run asynchronous client with timeout '%u'\n"
+    "Error running asynchronous client with timeout '%u'\n"
 };
 
 const RTILogMessage DDSOPCUA_LOG_XML_READ_ATTRIBUTE_suss = {
