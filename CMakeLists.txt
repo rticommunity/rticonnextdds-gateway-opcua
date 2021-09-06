@@ -100,15 +100,15 @@ connextdds_embed_source_file(
     OPCUA_BUILTIN_TYPES_XML
 )
 
-set(script_extension "")
+set(RTIGATEWAY_SCRIPT_EXTENSION "")
 if(WIN32)
-    set(script_extension ".bat")
+    set(RTIGATEWAY_SCRIPT_EXTENSION ".bat")
 endif()
 
-set(LAUNCH_EXECUTABLE_NAME "rtiddsopcuagateway")
+set(LAUNCH_EXECUTABLE_NAME "rtiddsopcuagatewayapp")
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/resources/templates/launch_script${script_extension}.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/scripts/${LAUNCH_EXECUTABLE_NAME}${script_extension}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources/templates/launch_script${RTIGATEWAY_SCRIPT_EXTENSION}.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/scripts/rtiddsopcuagateway${RTIGATEWAY_SCRIPT_EXTENSION}"
 )
 
 # Build open62541
@@ -326,28 +326,49 @@ install(DIRECTORY "${CMAKE_BINARY_DIR}/resources/xml/"
 )
 
 if (BUILD_SHARED_LIBS)
+    set(conextdds_libraries_release_shared
+        "${CONNEXTDDS_CPP_API_LIBRARIES_RELEASE_SHARED}"
+        "${CONNEXTDDS_CPP2_API_LIBRARIES_RELEASE_SHARED}"
+        "${ROUTING_SERVICE_API_LIBRARIES_RELEASE_SHARED}"
+        "${ROUTING_SERVICE_INFRASTRUCTURE_LIBRARIES_RELEASE_SHARED}"
+        "${MESSAGING_CPP2_API_LIBRARIES_RELEASE_SHARED}"
+        "${METP_LIBRARIES_RELEASE_SHARED}"
+        "${RTIXML2_LIBRARIES_RELEASE_SHARED}"
+        "${RTIAPPUTILS_C_LIBRARIES_RELEASE_SHARED}"
+    )
+    set(conextdds_libraries_debug_shared
+        "${CONNEXTDDS_CPP_API_LIBRARIES_DEBUG_SHARED}"
+        "${CONNEXTDDS_CPP2_API_LIBRARIES_DEBUG_SHARED}"
+        "${ROUTING_SERVICE_API_LIBRARIES_DEBUG_SHARED}"
+        "${ROUTING_SERVICE_INFRASTRUCTURE_LIBRARIES_DEBUG_SHARED}"
+        "${MESSAGING_CPP2_API_LIBRARIES_DEBUG_SHARED}"
+        "${METP_LIBRARIES_DEBUG_SHARED}"
+        "${RTIXML2_LIBRARIES_DEBUG_SHARED}"
+        "${RTIAPPUTILS_C_LIBRARIES_DEBUG_SHARED}"
+    )
+
+    if(WIN32)
+        string(REPLACE
+            ".lib"
+            ".dll"
+            conextdds_libraries_release_shared
+            "${conextdds_libraries_release_shared}"
+        )
+        string(REPLACE
+            ".lib"
+            ".dll"
+            conextdds_libraries_debug_shared
+            "${conextdds_libraries_debug_shared}"
+        )
+    endif()
+
     install(FILES
-        ${CONNEXTDDS_CPP_API_LIBRARIES_RELEASE_SHARED}
-        ${CONNEXTDDS_CPP2_API_LIBRARIES_RELEASE_SHARED}
-        ${ROUTING_SERVICE_API_LIBRARIES_RELEASE_SHARED}
-        ${ROUTING_SERVICE_INFRASTRUCTURE_LIBRARIES_RELEASE_SHARED}
-        ${MESSAGING_CPP2_API_LIBRARIES_RELEASE_SHARED}
-        ${METP_LIBRARIES_RELEASE_SHARED}
-        ${RTIXML2_LIBRARIES_RELEASE_SHARED}
-        ${RTIAPPUTILS_C_LIBRARIES_RELEASE_SHARED}
+        ${conextdds_libraries_release_shared}
         CONFIGURATIONS Release
         DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
     )
-
     install(FILES
-        ${CONNEXTDDS_CPP_API_LIBRARIES_DEBUG_SHARED}
-        ${CONNEXTDDS_CPP2_API_LIBRARIES_DEBUG_SHARED}
-        ${ROUTING_SERVICE_API_LIBRARIES_DEBUG_SHARED}
-        ${ROUTING_SERVICE_INFRASTRUCTURE_LIBRARIES_DEBUG_SHARED}
-        ${MESSAGING_CPP2_API_LIBRARIES_DEBUG_SHARED}
-        ${METP_LIBRARIES_DEBUG_SHARED}
-        ${RTIXML2_LIBRARIES_DEBUG_SHARED}
-        ${RTIAPPUTILS_C_LIBRARIES_DEBUG_SHARED}
+        ${conextdds_libraries_debug_shared}
         CONFIGURATIONS Debug
         DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
     )
