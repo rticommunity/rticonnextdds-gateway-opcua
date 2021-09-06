@@ -1,4 +1,4 @@
-.. include:: ../../router.1.0/srcDoc/vars.rst
+.. include:: vars.rst
 
 .. _section-tutorials:
 
@@ -145,10 +145,10 @@ address space of the OPC UA Server.
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 5-46
+    :lines: 21-61
     :linenos:
     :dedent: 4
-    :lineno-start: 5
+    :lineno-start: 20
 
 As you may have noticed, the *OPC UA/DDS Gateway* references some
 non-primitive DDS types that are equivalent to builtin OPC UA types (e.g.,
@@ -175,10 +175,10 @@ On one hand, the OPC UA Server is specified via the ``opcua_connection`` tag:
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 236-239
+    :lines: 264-267
     :linenos:
     :dedent: 8
-    :lineno-start: 236
+    :lineno-start: 264
 
 As shown above, the ``server_endpoint_url`` configures the Gateway to connect
 to an OPC UA Server that listens on ``localhost`` on port ``4840``.
@@ -189,10 +189,10 @@ The DomainParticipant that joins DDS Domain 0 is configured as follows:
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 243-247
+    :lines: 271-275
     :linenos:
     :dedent: 8
-    :lineno-start: 243
+    :lineno-start: 271
 
 Note that the DomainParticipant registers the ``ScalarTypes`` type declared
 above, so that it can be used later on in the context of DDS Output.
@@ -225,17 +225,17 @@ of the subscription protocol, such as the ``<requested_publishing_interval>``.
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 271-438
+    :lines: 299-465
     :linenos:
     :dedent: 16
-    :lineno-start: 271
+    :lineno-start: 299
 
 When adding node attributes to monitor, you must set the
 ``dds_topic_field_name`` attribute to match the name of a member of the
 Data Type associated with the DDS Output Topic. That will indicate the field
 within the DDS Topic that will contain the value of the node attribute.
 
-For example, when we decelare
+For example, when we declare
 ``<node_attribute dds_topic_field_name="my_boolean">``, we use the
 ``my_boolean`` name, because we want to assign the value of the data
 item to the ``my_boolean`` member of the ``ScalarTypes`` DDS type associated
@@ -252,10 +252,10 @@ with ``TRANSIENT_LOCAL_DURABILITY``.
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 443-457
+    :lines: 469-483
     :linenos:
     :dedent: 16
-    :lineno-start: 443
+    :lineno-start: 469
 
 .. _section_running_rtiddsspy:
 
@@ -267,7 +267,7 @@ you can subscribe to the data published by the Gateway on Domain 0, as a result
 of the data changes in the OPC UA Server.
 
 To run the *RTI DDS Spy* utility, run the corresponding script under
-``<DDSOPCUA_HOME>/bin`` as follows:
+``<CONNEXTDDS_DIR>/bin`` as follows:
 
 .. code-block:: console
 
@@ -367,7 +367,7 @@ by the *OPC UA/DDS Gateway* as a result of data changes in the OPC UA Server.
 
 .. code-block:: console
 
-   $ $DDSOPCUA_HOME/bin/bin/rtiddsspy -printSample
+   $ $CONNEXTDDS_DIR/bin/rtiddsspy -printSample
 
 .. _section-opcua2dds-read-write:
 
@@ -430,11 +430,11 @@ using the ``<service_set>`` tag as follows:
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 249-269
+    :lines: 277-297
     :linenos:
     :emphasize-lines: 8-17
     :dedent: 4
-    :lineno-start: 249
+    :lineno-start: 277
 
 On the DDS side, the *Gateway* configuration uses ``MyDomainParticipant``
 to instantiate a DDS *DataReader* for processing service requests, and a DDS
@@ -459,27 +459,27 @@ demonstration purposes.
 .. code-block:: console
 
     usage:  tutorial-dds-requester [--help]
-                                 <command> [<args>]
+                                   <command> [<args>]
 
     These are the supported commands:
 
     read   Reads the value of a Variable Node in the addressspace of an OPC UA Server.
 
         tutorial-dds-requester read --server-id <server_id>
-                                  --node-id <namespace_index>:<identifier>
-                                  [--iterations <number_of_iterations>]
-                                  [--period <milliseconds_between_reads>]
-                                  [--domain-id <dds_domain_id>]
+                                    --node-id <namespace_index>:<identifier>
+                                    [--iterations <number_of_iterations>]
+                                    [--period <milliseconds_between_reads>]
+                                    [--domain-id <dds_domain_id>]
 
     write  Updates the value of a Variable Node in the addressspace of an OPC UA Server.
 
         tutorial-dds-requester write --server-id <server_id>
-                                   --node-id <namespace_index>:<identifier>
-                                   --type "<value_type>"
-                                   --value "<value>"
-                                   [--iterations <number_of_iterations>]
-                                   [--period <milliseconds_between_writes>]
-                                   [--domain-id <dds_domain_id>]
+                                     --node-id <namespace_index>:<identifier>
+                                     --type "<value_type>"
+                                     --value "<value>"
+                                     [--iterations <number_of_iterations>]
+                                     [--period <milliseconds_between_writes>]
+                                     [--domain-id <dds_domain_id>]
 
 Each command takes its own command-line arguments that indicate the remote
 OPC UA Server that must address the requests. The OPC UA Server must be
@@ -745,10 +745,10 @@ supports: ``boolean``, ``byte``, ``int16``, ``uint16``, ``int32``, ``uint32``,
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 132-222
+    :lines: 147-237
     :linenos:
     :dedent: 4
-    :lineno-start: 132
+    :lineno-start: 147
 
 Configuring OPC UA/DDS Gateway Service
 ``````````````````````````````````````
@@ -761,10 +761,10 @@ In this tutorial, we create a new service tag named ``publicationExample``.
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 829
+    :lines: 852
     :linenos:
     :dedent: 4
-    :lineno-start: 829
+    :lineno-start: 852
 
 
 Configuring DDS DomainParticipants
@@ -774,10 +774,10 @@ capable of joining the desired DDS Domain, in this case Domain 0:
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 840-843
+    :lines: 863-866
     :linenos:
     :dedent: 8
-    :lineno-start: 840
+    :lineno-start: 863
 
 The DomainParticipant registers both the aforementioned ``MyType`` and
 ``ShapeType``, which we will use in the next tutorial.
@@ -791,10 +791,10 @@ connection with the appropriate configuration:
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 837-838
+    :lines: 860-861
     :linenos:
     :dedent: 8
-    :lineno-start: 837
+    :lineno-start: 860
 
 Configuring OPC UA to DDS Bridge and Publications
 `````````````````````````````````````````````````
@@ -811,10 +811,10 @@ declares a DDS Input and an OPC UA Output.
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 845-846
+    :lines: 868-877
     :linenos:
     :dedent: 8
-    :lineno-start: 845
+    :lineno-start: 868
 
 
 Configuring DDS Inputs and OPC UA Outputs
@@ -827,10 +827,10 @@ registered with the *DomainParticipant*) as follows:
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 847-851
+    :lines: 878-882
     :linenos:
     :dedent: 12
-    :lineno-start: 847
+    :lineno-start: 878
 
 DDS Inputs may configure other aspects, such as the QoS policies of the
 internal DDS *DataReaders* and sample selectors. We will show how to use
@@ -846,10 +846,10 @@ Attribute IDs. Also, it must provide the ``dds_topic_field_name`` that the
 
 .. literalinclude:: ../resources/xml/RTI_DDS_OPCUA_SERVICE.xml
     :language: XML
-    :lines: 852-1106
+    :lines: 883-1137
     :linenos:
     :dedent: 12
-    :lineno-start: 852
+    :lineno-start: 883
 
 .. _section-subscribing-with-generic-opcua-client:
 

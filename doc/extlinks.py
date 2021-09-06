@@ -5,8 +5,8 @@
 # This file contains a variable that represents the product version
 #
 
-RTI_VERSION = '6.0.0'
-RTI_VERSION_SHORT = '6.0.0'
+RTI_VERSION = '6.1.0'
+RTI_VERSION_SHORT = '6.1.0'
 
 LINK_XML_SPEC = 'https://www.w3.org/TR/2008/REC-xml-20081126/'
 
@@ -75,7 +75,7 @@ LINK_COMMUNITY_EXAMPLES_RECORDING_CPP_STORAGE = '%s' \
 LINK_COMMUNITY_EXAMPLES_RECORDING_SERVICE_ADMIN = '%s' \
     'recording_service/service_admin/cpp' \
      % LINK_COMMUNITY_EXAMPLES
-     
+
 LINK_COMMUNITY_EXAMPLES_RECORDING_SERVICE_AS_LIB= '%s' \
     'recording_service/service_as_lib/cpp' \
      % LINK_COMMUNITY_EXAMPLES

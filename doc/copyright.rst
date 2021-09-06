@@ -1,4 +1,3 @@
-.. include:: ../../router.1.0/srcDoc/copyright.rst
 
 Third Party Licenses
 --------------------

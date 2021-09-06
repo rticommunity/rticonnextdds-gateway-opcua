@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'RTI OPC UA/DDS Gateway'
-copyright = '2019, Real-Time Innovations, Inc'
+copyright = '2021, Real-Time Innovations, Inc'
 author = 'Real-Time Innovations, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -127,8 +127,7 @@ html_theme = 'sphinx_rtd_theme'
 
 
 def setup(app):
-    app.add_stylesheet('theme_overrides.css')
-    app.add_javascript('custom.js')
+    app.add_css_file('theme_overrides.css')
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

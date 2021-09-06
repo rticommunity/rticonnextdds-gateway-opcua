@@ -29,8 +29,8 @@ Supported Platforms
 Compatibility
 ^^^^^^^^^^^^^
 For backward compatibility information between *OPC UA/DDS Gateway*
-6.0.0 and previous releases, please see the *Migration Guide* on the
-`RTI Community portal <https://community.rti.com/Documentation/>`_.
+6.1.0 and previous releases, please see the *Migration Guide* on the
+`RTI Community portal <https://community.rti.com/documentation/>`_.
 
 Known Limitations
 ^^^^^^^^^^^^^^^^^

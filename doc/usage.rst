@@ -1,3 +1,5 @@
+.. include:: vars.rst
+
 .. _section-usage:
 
 Usage
@@ -44,10 +46,6 @@ Command-Line Parameters
 -----------------------
 The following table describes the command-line parameters for the
 *OPC UA/DDS Gateway*. They are all optional, except for ``-cfgName``.
-
-.. |br| raw:: html
-
-   <br />
 
 .. list-table:: RTI OPC UA/DDS Gateway Command-line Options
     :name: TableCommandLineOptions

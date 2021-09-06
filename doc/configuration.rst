@@ -1,4 +1,4 @@
-.. include:: ../../router.1.0/srcDoc/vars.rst
+.. include:: vars.rst
 
 .. _section-configuration:
 
