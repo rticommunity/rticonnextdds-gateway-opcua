@@ -82,7 +82,7 @@ will generate a Visual Studio compatible with Visual Studio 2017 with 64-bit
 support:
 
 ```bash
-cmake -G "Visual Studio 15 2017" -A x64
+cmake -G "Visual Studio 15 2017" -A x64 ..
 ```
 
 #### Installation Directory
