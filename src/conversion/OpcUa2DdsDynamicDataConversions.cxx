@@ -212,11 +212,34 @@ inline void set_dynamic_data_member<UA_String, std::string>(
         const UA_String* opcua_data,
         const uint32_t dds_member_id)
 {
+    std::string value(
+            reinterpret_cast<const char*>(opcua_data->data),
+            opcua_data->length);
+    dds_data.value(dds_member_id, value);
+}
+
+template<>
+inline void set_dynamic_data_member<UA_String, DDS_Char>(
+        DynamicData& dds_data,
+        const UA_String* opcua_data,
+        const std::string& dds_member_name)
+{
+    dds_data.value(
+            dds_member_name,
+            static_cast<DDS_Char>(
+                    opcua_data->length > 0 ? opcua_data->data[0] : '\0'));
+}
+
+template<>
+inline void set_dynamic_data_member<UA_String, DDS_Char>(
+        DynamicData& dds_data,
+        const UA_String* opcua_data,
+        const uint32_t dds_member_id)
+{
     dds_data.value(
             dds_member_id,
-            std::string(
-                    reinterpret_cast<const char*>(opcua_data->data),
-                    opcua_data->length));
+            static_cast<DDS_Char>(
+                    opcua_data->length > 0 ? opcua_data->data[0] : '\0'));
 }
 
 template<>
@@ -412,7 +435,8 @@ void set_dynamic_data_member<UA_ExtensionObject, types::ExtensionObject>(
 
 std::function<void(DynamicData&, const UA_Variant&, const std::string&)>
 opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
-        const sdk::types::BuiltinTypeKind& opcua_type_kind)
+        const sdk::types::BuiltinTypeKind& opcua_type_kind,
+        const dds::core::xtypes::TypeKind& dds_type_kind)
 {
     switch (opcua_type_kind) {
     case sdk::types::BuiltinTypeKind::BOOL_TYPE:
@@ -482,6 +506,15 @@ opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
                         UA_Double,
                         DDS_Double>);
     case sdk::types::BuiltinTypeKind::STRING_TYPE:
+        if (dds_type_kind == dds::core::xtypes::TypeKind::CHAR_8_TYPE) {
+            return static_cast<void (*)(
+                    DynamicData&,
+                    const UA_Variant&,
+                    const std::string&)>(
+                    opc_ua_variant_scalar_to_dds_dynamic_data_scalar_type<
+                            UA_String,
+                            DDS_Char>);
+        }
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
                 opc_ua_variant_scalar_to_dds_dynamic_data_scalar_type<
@@ -556,7 +589,8 @@ opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
 
 std::function<void(DynamicData&, const UA_Variant&, const std::string&)>
 opc_ua_array_variant_to_dds_dynamic_data_fnc(
-        const sdk::types::BuiltinTypeKind& opcua_type_kind)
+        const sdk::types::BuiltinTypeKind& opcua_type_kind,
+        const dds::core::xtypes::TypeKind& dds_type_kind)
 {
     switch (opcua_type_kind) {
     case sdk::types::BuiltinTypeKind::BOOL_TYPE:
@@ -625,12 +659,22 @@ opc_ua_array_variant_to_dds_dynamic_data_fnc(
                 opc_ua_variant_scalar_to_dds_dynamic_data_sequence_type<
                         UA_Double,
                         DDS_Double>);
-    case sdk::types::BuiltinTypeKind::STRING_TYPE:
+    case sdk::types::BuiltinTypeKind::STRING_TYPE: {
+        if (dds_type_kind == dds::core::xtypes::TypeKind::CHAR_8_TYPE) {
+            return static_cast<void (*)(
+                    DynamicData&,
+                    const UA_Variant&,
+                    const std::string&)>(
+                    opc_ua_variant_scalar_to_dds_dynamic_data_sequence_type<
+                            UA_String,
+                            DDS_Char>);
+        }
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
                 opc_ua_variant_scalar_to_dds_dynamic_data_sequence_type<
                         UA_String,
                         std::string>);
+    }
     case sdk::types::BuiltinTypeKind::DATETIME_TYPE:
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(

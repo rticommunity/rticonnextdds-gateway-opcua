@@ -413,13 +413,15 @@ if (RTIGATEWAY_BUILD_TESTS)
     connextdds_copy_files(
         INPUT_FILES
             "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/IntegrationTestTypes.xml"
+            "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/IntegrationTestConfigurations.xml"
+            "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/OpcUaBuiltinDataTypes.xml"
         OUTPUT_DIR
-            "${CMAKE_CURRENT_BINARY_DIR}/resources/xml"
+            "${CMAKE_CURRENT_BINARY_DIR}/src/test"
     )
 
     connextdds_rtiddsgen_run(
         IDL_FILE
-            "${CMAKE_CURRENT_BINARY_DIR}/resources/xml/IntegrationTestTypes.xml"
+            "${CMAKE_CURRENT_BINARY_DIR}/src/test/IntegrationTestTypes.xml"
         OUTPUT_DIRECTORY
             "${CMAKE_CURRENT_BINARY_DIR}/src/test/"
         LANG C++11

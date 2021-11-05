@@ -59,6 +59,17 @@ inline std::string normalize_path(const std::string& file_name)
     return normalized;
 }
 
+static std::string executable_path()
+{
+    char path[DDSOPCUA_FILE_PATH_MAX_LENGTH + 1] = {'\0'};
+    if (!RTIOsapiUtility_getSelfDirectoryPath(
+            path,
+            RTI_OSAPI_STRING_SEQ_STRING_MAX_SIZE)) {
+    }
+
+    return std::string(path);
+}
+
 class Thread {
 public:
     Thread(const std::string& name = std::string("Thread"),

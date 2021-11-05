@@ -128,6 +128,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // Boolean
     bool bool_value = i % 2 ? true : false;
     std::vector<DDS_Boolean> bool_vector(MAX_LENGTH, bool_value);
+    bool_vector[0] = i % 2 ? DDS_BOOLEAN_FALSE : DDS_BOOLEAN_TRUE;
+    bool_vector[MAX_LENGTH - 1] = i % 2 ? DDS_BOOLEAN_TRUE : DDS_BOOLEAN_FALSE;
     sample.value<bool>("my_boolean", bool_value);
     sample.set_values("my_boolean_array", bool_vector);
     sample.set_values("my_boolean_sequence", bool_vector);
@@ -135,6 +137,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // Byte
     DDS_Octet octet_value = static_cast<DDS_Octet>(i % 128);
     std::vector<DDS_Octet> octet_vector(MAX_LENGTH, octet_value);
+    octet_vector[0] = i % 2 ? RTI_UINT8_MIN : RTI_UINT8_MAX;
+    octet_vector[MAX_LENGTH - 1] = i % 2 ? RTI_UINT8_MAX : RTI_UINT8_MIN;
     sample.value<DDS_Octet>("my_byte", octet_value);
     sample.set_values("my_byte_array", octet_vector);
     sample.set_values("my_byte_sequence", octet_vector);
@@ -143,6 +147,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     int16_t int16_value = static_cast<int16_t>(
             ((i % 2) == 1) ? (i % RTI_INT16_MAX) : -((i % RTI_INT16_MAX)));
     std::vector<int16_t> int16_vector(MAX_LENGTH, int16_value);
+    int16_vector[0] = i % 2 ? RTI_INT16_MIN : RTI_INT16_MAX;
+    int16_vector[MAX_LENGTH - 1] = i % 2 ? RTI_INT16_MAX : RTI_INT16_MIN;
     sample.value<int16_t>("my_int16", int16_value);
     sample.set_values("my_int16_array", int16_vector);
     sample.set_values("my_int16_sequence", int16_vector);
@@ -150,6 +156,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // UInt16
     uint16_t uint16_value = static_cast<uint16_t>(i % RTI_UINT16_MAX);
     std::vector<uint16_t> uint16_vector(MAX_LENGTH, uint16_value);
+    uint16_vector[0] = i % 2 ? RTI_UINT16_MIN : RTI_UINT16_MAX;
+    uint16_vector[MAX_LENGTH - 1] = i % 2 ? RTI_UINT16_MAX : RTI_UINT16_MIN;
     sample.value<uint16_t>("my_uint16", uint16_value);
     sample.set_values("my_uint16_array", uint16_vector);
     sample.set_values("my_uint16_sequence", uint16_vector);
@@ -158,6 +166,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     int32_t int32_value = static_cast<int32_t>(
             ((i % 2) == 1) ? (i % RTI_INT32_MAX) : -((i % RTI_INT32_MAX)));
     std::vector<int32_t> int32_vector(MAX_LENGTH, int32_value);
+    int32_vector[0] = i % 2 ? RTI_INT32_MIN : RTI_INT32_MAX;
+    int32_vector[MAX_LENGTH - 1] = i % 2 ? RTI_INT32_MAX : RTI_INT32_MIN;
     sample.value<int32_t>("my_int32", int32_value);
     sample.set_values("my_int32_array", int32_vector);
     sample.set_values("my_int32_sequence", int32_vector);
@@ -165,6 +175,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // UInt32
     uint32_t uint32_value = static_cast<uint32_t>(i % RTI_UINT32_MAX);
     std::vector<uint32_t> uint32_vector(MAX_LENGTH, uint32_value);
+    uint32_vector[0] = i % 2 ? RTI_UINT32_MIN : RTI_UINT32_MAX;
+    uint32_vector[MAX_LENGTH - 1] = i % 2 ? RTI_UINT32_MAX : RTI_UINT32_MIN;
     sample.value<uint32_t>("my_uint32", uint32_value);
     sample.set_values("my_uint32_array", uint32_vector);
     sample.set_values("my_uint32_sequence", uint32_vector);
@@ -173,6 +185,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     rti::core::int64 int64_value = static_cast<rti::core::int64>(
             ((i % 2) == 1) ? (i % RTI_INT64_MAX) : -((i % RTI_INT64_MAX)));
     std::vector<rti::core::int64> int64_vector(MAX_LENGTH, int64_value);
+    int64_vector[0] = i % 2 ? RTI_INT64_MIN : RTI_INT64_MAX;
+    int64_vector[MAX_LENGTH - 1] = i % 2 ? RTI_INT64_MAX : RTI_INT64_MIN;
     sample.value<rti::core::int64>("my_int64", int64_value);
     sample.set_values("my_int64_array", int64_vector);
     sample.set_values("my_int64_sequence", int64_vector);
@@ -181,6 +195,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     rti::core::uint64 uint64_value =
             static_cast<rti::core::uint64>(i % RTI_UINT64_MAX);
     std::vector<rti::core::uint64> uint64_vector(MAX_LENGTH, uint64_value);
+    uint64_vector[0] = i % 2 ? RTI_UINT64_MIN : RTI_UINT64_MAX;
+    uint64_vector[MAX_LENGTH - 1] = i % 2 ? RTI_UINT64_MAX : RTI_UINT64_MIN;
     sample.value<rti::core::uint64>("my_uint64", uint64_value);
     sample.set_values("my_uint64_array", uint64_vector);
     sample.set_values("my_uint64_sequence", uint64_vector);
@@ -188,6 +204,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // Float
     float float_value = static_cast<float>((i % RTI_INT32_MAX) * 0.5);
     std::vector<float> float_vector(MAX_LENGTH, float_value);
+    float_vector[0] = i % 2 ? RTI_FLOAT_MIN : RTI_FLOAT_MAX;
+    float_vector[MAX_LENGTH - 1] = i % 2 ? RTI_FLOAT_MAX : RTI_FLOAT_MIN;
     sample.value<float>("my_float", float_value);
     sample.set_values("my_float_array", float_vector);
     sample.set_values("my_float_sequence", float_vector);
@@ -195,6 +213,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // Double
     double double_value = static_cast<double>((i % RTI_INT32_MAX) * 0.5);
     std::vector<double> double_vector(MAX_LENGTH, double_value);
+    double_vector[0] = i % 2 ? RTI_DOUBLE_MIN : RTI_DOUBLE_MAX;
+    double_vector[MAX_LENGTH - 1] = i % 2 ? RTI_DOUBLE_MAX : RTI_DOUBLE_MIN;
     sample.value<double>("my_double", double_value);
     sample.set_values("my_double_array", double_vector);
     sample.set_values("my_double_sequence", double_vector);
@@ -202,6 +222,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // Char
     DDS_Char char_value = (i % 2) ? 'a' : 'b';
     std::vector<DDS_Char> char_vector(MAX_LENGTH, char_value);
+    char_vector[0] = i % 2 ? 'A' : 'Z';
+    char_vector[MAX_LENGTH - 1] = i % 2 ? 'Z' : 'A';
     sample.value<DDS_Char>("my_char", char_value);
     sample.set_values("my_char_array", char_vector);
     sample.set_values("my_char_sequence", char_vector);
@@ -209,6 +231,8 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     // String
     std::string string_value = (i % 2) ? "Odd" : "Even";
     std::vector<std::string> string_vector(MAX_LENGTH, string_value);
+    string_vector[0] = i % 2 ? "First" : "Last";
+    string_vector[MAX_LENGTH - 1] = i % 2 ? "Last" : "First";
     sample.value<std::string>("my_string", string_value);
     for (int i = 0; i < MAX_LENGTH; i++) {
         sample.loan_value("my_string_array")

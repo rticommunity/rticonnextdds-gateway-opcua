@@ -79,16 +79,26 @@ void OpcUaSubscriptionStreamReader::initialize_subscription()
         rti::opcua::sdk::types::Variant variant;
         opcua_client_.read_value_attribute(variant, monitored_item.node_id());
 
+        dds::core::xtypes::TypeKind dds_type_kind =
+                dds::core::xtypes::TypeKind::NO_TYPE;
         // And populate the sample so that we can test if it's assignable
         if (variant.is_scalar()) {
+            dds_type_kind = data_samples_.at(0)
+                                    .member_info(monitored_item.name())
+                                    .member_kind();
             conversion::opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
-                    variant.get_type_kind())(
+                    variant.get_type_kind(),
+                    dds_type_kind)(
                     data_samples_.at(0),
                     *variant.get(),
                     monitored_item.name());
         } else {
+            dds_type_kind = data_samples_.at(0)
+                                    .member_info(monitored_item.name())
+                                    .element_kind();
             conversion::opc_ua_array_variant_to_dds_dynamic_data_fnc(
-                    variant.get_type_kind())(
+                    variant.get_type_kind(),
+                    dds_type_kind)(
                     data_samples_.at(0),
                     *variant.get(),
                     monitored_item.name());
@@ -105,9 +115,11 @@ void OpcUaSubscriptionStreamReader::initialize_subscription()
             monitored_item.name(),
             variant.is_scalar()
                     ? conversion::opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
-                            variant.get_type_kind())
+                            variant.get_type_kind(),
+                            dds_type_kind)
                     : conversion::opc_ua_array_variant_to_dds_dynamic_data_fnc(
-                            variant.get_type_kind()),
+                            variant.get_type_kind(),
+                            dds_type_kind),
             subscription_id
         };
     }

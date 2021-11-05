@@ -163,6 +163,35 @@ void set_dynamic_data_member<UA_String, std::string>(
         const uint32_t dds_member_id);
 
 /**
+ * @brief Set the dynamic data member of type DDS_Char with the value
+ * of a UA_String (always teh first character).
+ *
+ * @param dd_value DynamicData member to be set.
+ * @param opcua_value OPC UA source value.
+ * @param dd_member_name Name of the DDS member to be set within the
+ * DynamicData object.
+ */
+template<>
+void set_dynamic_data_member<UA_String, DDS_Char>(
+        DynamicData& dd_value,
+        const UA_String* opcua_value,
+        const std::string& dd_member_name);
+
+/**
+ * @brief Set the dynamic data member of type DDS_Char with the value
+ * of a UA_String (always the first character).
+ *
+ * @param dd_value DynamicData member to be set.
+ * @param opcua_value OPC UA source value.
+ * @param dd_member_id DDS member ID to be set within the DynamicData object.
+ */
+template<>
+void set_dynamic_data_member<UA_String, DDS_Char>(
+        DynamicData& dd_value,
+        const UA_String* opcua_value,
+        const uint32_t dds_member_id);
+
+/**
  * @brief Set the dynamic data member of type rti::opcua::types::Guid with the
  * value of a UA_Guid.
  *
@@ -457,14 +486,17 @@ void opc_ua_variant_scalar_to_dds_dynamic_data_scalar_type(
  * callbacks, that need to set the value of a DynamicData member without
  * much context of the value to be transformed.
  *
- * @param type_kind Type kind of the value held in the OPC UA Variant.
+ * @param opcua_type_kind Type kind of the value held in the OPC UA Variant.
+ * @param dds_type_kind Type kind of the value held in the DDS DynamicData
+ * member.
  * @return std::function<void(DynamicData&, const UA_Variant&,
  * cons std::string&)> Provides the appropriate function based on the tye of
  * the scalar value held in the OPC UA Variant.
  */
 std::function<void(DynamicData&, const UA_Variant&, const std::string&)>
 opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
-        const sdk::types::BuiltinTypeKind& type_kind);
+        const sdk::types::BuiltinTypeKind& type_kind,
+        const dds::core::xtypes::TypeKind& dds_type_kind);
 
 
 /**
@@ -513,8 +545,8 @@ opc_ua_variant_value_to_dds_dynamic_data_variant_value(
  * method supports both scalar and array Variant values.
  *
  * This method is only activated if the DDS_TYPE template parameter is not of
- * an arithmetic type. In that case, the method iterates overy every element
- * of the OPC UA Variant (once for scalar values) and assings the corresponding
+ * an arithmetic type. In that case, the method iterates every every element
+ * of the OPC UA Variant (once for scalar values) and assigns the corresponding
  * element to the corresponding element in the DynamicData sequence holding the
  * Variant value.
  *
@@ -543,11 +575,13 @@ opc_ua_variant_value_to_dds_dynamic_data_variant_value(
 
     LoanedDynamicData variant_array = dd_value.loan_value(dd_member_name);
 
-    // Member IDs for sequences are 1-indexed, so we need to start with i=1
-    for (uint32_t i = 1; i <= array_length; i++) {
-        opc_ua_variant_scalar_to_dds_dynamic_data_scalar_type<
-                OPCUA_TYPE,
-                DDS_TYPE>(variant_array.get(), opcua_value, i);
+    for (uint32_t i = 0; i < array_length; i++) {
+        OPCUA_TYPE* opcua_data = static_cast<OPCUA_TYPE*>(opcua_value.data);
+        set_dynamic_data_member<OPCUA_TYPE, DDS_TYPE>(
+                variant_array.get(),
+                &opcua_data[i],
+                i + 1);  // Member IDs for sequences are 1-indexed, so we need
+                         // to start with i=1
     }
 }
 
@@ -594,13 +628,16 @@ void opc_ua_variant_scalar_to_dds_dynamic_data_sequence_type(
  * much context of the value to be transformed.
  *
  * @param type_kind Type kind of the value held in the OPC UA Variant.
+ * @param dds_type_kind Type kind of the elements held in the DDS Dynamic Data
+ * member.
  * @return std::function<void(DynamicData&, const UA_Variant&,
  * cons std::string&)> Provides the appropriate function based on the tye of
  * the scalar value held in the OPC UA Variant.
  */
 std::function<void(DynamicData&, const UA_Variant&, const std::string&)>
 opc_ua_array_variant_to_dds_dynamic_data_fnc(
-        const sdk::types::BuiltinTypeKind& type_kind);
+        const sdk::types::BuiltinTypeKind& opcua_type_kind,
+        const dds::core::xtypes::TypeKind& dds_type_kind);
 
 /**
  * @brief Set variant_value member of an DynamicData object representing an

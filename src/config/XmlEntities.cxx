@@ -196,9 +196,10 @@ void XmlOpcUaSubscription::get_subscription_property(
             RTIXMLUTILSObject_getFirstChildWithTag(
                     opcua_subscription_xml,
                     OPCUA_SUBSCRIPTION_PROTOCOL_TAG_NAME.c_str());
-    xml_object_check_lookup(
-            opcua_subscription_protocol_xml,
-            opcua_subscription_xml);
+    if (opcua_subscription_protocol_xml == nullptr) {
+        // User didn't configure the OPC UA subscription protocol
+        return;
+    }
 
     // RequestedPublishingInterval
     struct RTIXMLUTILSObject* requested_publishing_interval_xml =

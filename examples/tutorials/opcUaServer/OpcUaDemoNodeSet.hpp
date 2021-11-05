@@ -29,6 +29,8 @@ struct RepeatedCallbackParam {
     int array_length;
 };
 
+const size_t ARRAY_MAX_LENGTH = 100;
+
 class OpcUaNodeSet {
 public:
     static bool add_nodeset(OpcUaServer& server)
@@ -452,7 +454,8 @@ public:
         attr.displayName = UA_LOCALIZEDTEXT(
                 const_cast<char*>(locale.c_str()),
                 const_cast<char*>(member_name.c_str()));
-        UA_Variant_setScalar(&attr.value, nullptr, &UA_TYPES[member_type]);
+        void* value = UA_new(&UA_TYPES[member_type]);
+        UA_Variant_setScalar(&attr.value, value, &UA_TYPES[member_type]);
         UA_Server_addVariableNode(
                 server.native_server(),
                 node_id,
@@ -463,6 +466,7 @@ public:
                 attr,
                 nullptr,
                 nullptr);
+        UA_delete(value, &UA_TYPES[member_type]);
     }
 
     static void add_array_instance_member(
@@ -482,7 +486,13 @@ public:
         attr.displayName = UA_LOCALIZEDTEXT(
                 const_cast<char*>(locale.c_str()),
                 const_cast<char*>(member_name.c_str()));
-        UA_Variant_setArray(&attr.value, nullptr, 0, &UA_TYPES[member_type]);
+
+        void *values = UA_Array_new(ARRAY_MAX_LENGTH, &UA_TYPES[member_type]);
+        UA_Variant_setArray(
+                &attr.value,
+                values,
+                ARRAY_MAX_LENGTH,
+                &UA_TYPES[member_type]);
         UA_Server_addVariableNode(
                 server.native_server(),
                 node_id,
@@ -493,6 +503,7 @@ public:
                 attr,
                 nullptr,
                 nullptr);
+        UA_Array_delete(values, ARRAY_MAX_LENGTH, &UA_TYPES[member_type]);
     }
 
     static void add_shape_topic_instance_members(

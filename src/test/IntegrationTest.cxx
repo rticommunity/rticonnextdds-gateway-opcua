@@ -25,20 +25,24 @@
 #include <rti/ddsopcua/requester/DdsRequester.hpp>
 
 #include "tutorials/ddsPublisher/DdsDemoPublisher.hpp"
+#include "service/Utils.hpp"
 #include "IntegrationTestTypes.hpp"
 #include "OpcUaTutorialServer.hpp"
 
 namespace rti { namespace ddsopcua { namespace test {
 
-const int MAX_RETRIES = 5;
+const int MAX_RETRIES = 20;
 
 class OpcUaDdsTutorialGateway {
 public:
-    OpcUaDdsTutorialGateway(const std::string& cfg_name) : gateway_(nullptr)
+    OpcUaDdsTutorialGateway(
+            const std::string& cfg_name,
+            const std::string& cfg_file = "")
+            : gateway_(nullptr)
     {
         rti::ddsopcua::Gateway::initialize_globals();
         gateway_ = new rti::ddsopcua::Gateway(
-                rti::ddsopcua::GatewayProperty(cfg_name));
+                rti::ddsopcua::GatewayProperty(cfg_name, cfg_file));
     }
 
     ~OpcUaDdsTutorialGateway()
@@ -109,8 +113,7 @@ bool assert_string_values(
         const std::string& server_id,
         uint16_t namespace_index,
         uint32_t numeric_identifier,
-        const std::string& value,
-        size_t size)
+        const std::vector<std::string>& value)
 {
     opcua::types::Variant variant;
 
@@ -123,17 +126,14 @@ bool assert_string_values(
         return false;
     }
 
-    if (variant.value().string_value().size() != size) {
+    if (variant.value().string_value().size() != value.size()) {
         return false;
     }
 
-    for (auto element : variant.value().string_value()) {
-        if (element != value) {
-            return false;
-        }
-    }
-
-    return true;
+    return std::equal(
+            variant.value().string_value().begin(),
+            variant.value().string_value().end(),
+            value.begin());
 }
 
 bool assert_int32_values(
@@ -141,8 +141,7 @@ bool assert_int32_values(
         const std::string& server_id,
         uint16_t namespace_index,
         uint32_t numeric_identifier,
-        int32_t value,
-        size_t size)
+        const std::vector<int32_t>& value)
 {
     opcua::types::Variant variant;
     if (!send_read_request(
@@ -153,14 +152,15 @@ bool assert_int32_values(
                 numeric_identifier)) {
         return false;
     }
-    if (variant.value().int32_value().size() != size) {
+    if (variant.value().int32_value().size() != value.size()) {
         return false;
     }
-    for (auto element : variant.value().int32_value()) {
-        if (element != value) {
-            return false;
-        }
-    }
+
+    return std::equal(
+            variant.value().int32_value().begin(),
+            variant.value().int32_value().end(),
+            value.begin());
+
 
     return true;
 }
@@ -170,8 +170,7 @@ bool assert_int16_values(
         const std::string& server_id,
         uint16_t namespace_index,
         uint32_t numeric_identifier,
-        int16_t value,
-        size_t size)
+        const std::vector<int16_t>& value)
 {
     opcua::types::Variant variant;
     if (!send_read_request(
@@ -182,16 +181,14 @@ bool assert_int16_values(
                 numeric_identifier)) {
         return false;
     }
-    if (variant.value().int16_value().size() != size) {
+    if (variant.value().int16_value().size() != value.size()) {
         return false;
     }
-    for (auto element : variant.value().int16_value()) {
-        if (element != value) {
-            return false;
-        }
-    }
 
-    return true;
+    return std::equal(
+            variant.value().int16_value().begin(),
+            variant.value().int16_value().end(),
+            value.begin());
 }
 
 bool assert_bool_values(
@@ -199,8 +196,7 @@ bool assert_bool_values(
         const std::string& server_id,
         uint16_t namespace_index,
         uint32_t numeric_identifier,
-        bool value,
-        size_t size)
+        const std::vector<bool>& value)
 {
     opcua::types::Variant variant;
     if (!send_read_request(
@@ -212,17 +208,14 @@ bool assert_bool_values(
         return false;
     }
 
-    if (variant.value().bool_value().size() != size) {
+    if (variant.value().bool_value().size() != value.size()) {
         return false;
     }
 
-    for (auto element : variant.value().bool_value()) {
-        if (element != value) {
-            return false;
-        }
-    }
-
-    return true;
+    return std::equal(
+            variant.value().bool_value().begin(),
+            variant.value().bool_value().end(),
+            value.begin());
 }
 
 TEST(IntegrationTests, Tutorial1)
@@ -258,7 +251,6 @@ TEST(IntegrationTests, Tutorial1)
                 for (const auto& sample : samples) {
                     if (sample.info().valid()) {
                         samples_read++;
-                        std::cout << sample.data() << std::endl;
                     }
                 }
             });
@@ -322,17 +314,19 @@ TEST(IntegrationTests, Tutorial2)
     status_code = requester.write_request(server_id, node_id, value, 10);
     ASSERT_EQ(status_code, 0);
 
-    ASSERT_TRUE(assert_bool_values(requester, server_id, 1, 51001, true, 1));
+    ASSERT_TRUE(assert_bool_values(requester, server_id, 1, 51001, { true }));
 
     // write a boolean array
     node_id.identifier_type().numeric_id(51101);
     value.array_dimensions({ 0 });
-    value.value().bool_value(
-            { true, true, true, true, true, true, true, true, true, true });
+    std::vector<bool> bool_values = { true,  false, true,  false, true,
+                                      false, true,  false, true,  false };
+    value.value().bool_value(bool_values);
     status_code = requester.write_request(server_id, node_id, value);
     ASSERT_EQ(status_code, 0);
 
-    ASSERT_TRUE(assert_bool_values(requester, server_id, 1, 51101, true, 10));
+    ASSERT_TRUE(
+            assert_bool_values(requester, server_id, 1, 51101, bool_values));
 
     // write a string
     node_id.identifier_type().numeric_id(51012);
@@ -341,29 +335,36 @@ TEST(IntegrationTests, Tutorial2)
     status_code = requester.write_request(server_id, node_id, value);
     ASSERT_EQ(status_code, 0);
 
-    ASSERT_TRUE(assert_string_values(requester, server_id, 1, 51012, "Odd", 1));
+    ASSERT_TRUE(
+            assert_string_values(requester, server_id, 1, 51012, { "Odd" }));
 
     // write a string array
+    std::vector<std::string> string_values = { "Odd 0", "Odd 1", "Odd 2",
+                                               "Odd 3", "Odd 4", "Odd 5",
+                                               "Odd 6", "Odd 7", "Odd 8" };
     node_id.identifier_type().numeric_id(51112);
     value.array_dimensions({ 0 });
-    value.value().string_value(
-            { "Odd", "Odd", "Odd", "Odd", "Odd", "Odd", "Odd", "Odd", "Odd" });
+    value.value().string_value(string_values);
     status_code = requester.write_request(server_id, node_id, value);
     ASSERT_EQ(status_code, 0);
 
-    ASSERT_TRUE(assert_string_values(requester, server_id, 1, 51112, "Odd", 9));
+    ASSERT_TRUE(assert_string_values(
+            requester,
+            server_id,
+            1,
+            51112,
+            string_values));
 
     // write non-existing nodes
     node_id.namespace_index(100);
     node_id.identifier_type().numeric_id(51112);
     value.array_dimensions({ 0 });
-    value.value().string_value(
-            { "Odd", "Odd", "Odd", "Odd", "Odd", "Odd", "Odd", "Odd", "Odd" });
+    value.value().string_value(string_values);
     status_code = requester.write_request(server_id, node_id, value);
     ASSERT_NE(status_code, 0);
 
     gateway.stop();
-    rti::ddsopcua::Gateway::finalize_globals();
+    server.stop();
 }
 
 TEST(IntegrationTests, Tutorial3)
@@ -411,25 +412,21 @@ TEST(IntegrationTests, Tutorial3)
     for (int i = 0; i < MAX_RETRIES && !read_values;
          i++, rti::util::sleep(dds::core::Duration(1))) {
         read_values =
-                assert_bool_values(requester, server_id, 1, 61103, true, 1);
+                assert_bool_values(requester, server_id, 1, 61103, { true });
     }
     ASSERT_TRUE(read_values);
-    ASSERT_TRUE(assert_bool_values(
-            requester,
-            server_id,
-            1,
-            61115,
-            true,
-            tutorials::MAX_LENGTH));
+    std::vector<bool> bool_vector(tutorials::MAX_LENGTH, true);
+    bool_vector[0] = false;
+    bool_vector[tutorials::MAX_LENGTH - 1] = true;
+    ASSERT_TRUE(
+            assert_bool_values(requester, server_id, 1, 61115, bool_vector));
 
-    ASSERT_TRUE(assert_int16_values(requester, server_id, 1, 61105, 1, 1));
-    ASSERT_TRUE(assert_int16_values(
-            requester,
-            server_id,
-            1,
-            61117,
-            1,
-            tutorials::MAX_LENGTH));
+    ASSERT_TRUE(assert_int16_values(requester, server_id, 1, 61105, { 1 }));
+    std::vector<int16_t> int16_vector(tutorials::MAX_LENGTH, 1);
+    int16_vector[0] = RTI_INT16_MIN;
+    int16_vector[tutorials::MAX_LENGTH - 1] = RTI_INT16_MAX;
+    ASSERT_TRUE(
+            assert_int16_values(requester, server_id, 1, 61117, int16_vector));
 
     // Write again in DDS and check integrity in OPC UA Server
 
@@ -441,25 +438,24 @@ TEST(IntegrationTests, Tutorial3)
     for (int i = 0; i < MAX_RETRIES && !read_values;
          i++, rti::util::sleep(dds::core::Duration(1))) {
         read_values =
-                assert_bool_values(requester, server_id, 1, 61103, false, 1);
+                assert_bool_values(requester, server_id, 1, 61103, { false });
     }
     ASSERT_TRUE(read_values);
-    ASSERT_TRUE(assert_bool_values(
-            requester,
-            server_id,
-            1,
-            61115,
-            false,
-            tutorials::MAX_LENGTH));
+    std::fill(bool_vector.begin(), bool_vector.end(), false);
+    bool_vector[0] = true;
+    bool_vector[tutorials::MAX_LENGTH - 1] = false;
+    ASSERT_TRUE(
+            assert_bool_values(requester, server_id, 1, 61115, bool_vector));
 
-    ASSERT_TRUE(assert_int16_values(requester, server_id, 1, 61105, -2, 1));
-    ASSERT_TRUE(assert_int16_values(
-            requester,
-            server_id,
-            1,
-            61117,
-            -2,
-            tutorials::MAX_LENGTH));
+    ASSERT_TRUE(assert_int16_values(requester, server_id, 1, 61105, { -2 }));
+    std::fill(int16_vector.begin(), int16_vector.end(), -2);
+    int16_vector[0] = RTI_INT16_MAX;
+    int16_vector[tutorials::MAX_LENGTH - 1] = RTI_INT16_MIN;
+    ASSERT_TRUE(
+            assert_int16_values(requester, server_id, 1, 61117, int16_vector));
+
+    gateway.stop();
+    server.stop();
 }
 
 TEST(IntegrationTests, Tutorial4)
@@ -504,21 +500,25 @@ TEST(IntegrationTests, Tutorial4)
     bool read_values = false;
     for (int i = 0; i < MAX_RETRIES && !read_values;
          i++, rti::util::sleep(dds::core::Duration(1))) {
-        read_values =
-                assert_string_values(requester, server_id, 1, 60103, "BLUE", 1);
+        read_values = assert_string_values(
+                requester,
+                server_id,
+                1,
+                60103,
+                { "BLUE" });
     }
     ASSERT_TRUE(read_values);
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60104, 42, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60104, 42, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60105, 42, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60106, 30, 1));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60104, { 42 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60104, { 42 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60105, { 42 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60106, { 30 }));
 
     ASSERT_TRUE(
-            assert_string_values(requester, server_id, 1, 60303, "BLUE", 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60304, 42, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60304, 42, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60305, 42, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60306, 30, 1));
+            assert_string_values(requester, server_id, 1, 60303, { "BLUE" }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60304, { 42 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60304, { 42 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60305, { 42 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60306, { 30 }));
 
     sample.color("RED");
     sample.x(43);
@@ -529,20 +529,24 @@ TEST(IntegrationTests, Tutorial4)
     writer.wait_for_acknowledgments(dds::core::Duration(10));
 
     ASSERT_FALSE(
-            assert_string_values(requester, server_id, 1, 60103, "RED", 1));
-    ASSERT_FALSE(assert_int32_values(requester, server_id, 1, 60104, 43, 1));
-    ASSERT_FALSE(assert_int32_values(requester, server_id, 1, 60105, 43, 1));
-    ASSERT_FALSE(assert_int32_values(requester, server_id, 1, 60106, 40, 1));
+            assert_string_values(requester, server_id, 1, 60103, { "RED" }));
+    ASSERT_FALSE(assert_int32_values(requester, server_id, 1, 60104, { 43 }));
+    ASSERT_FALSE(assert_int32_values(requester, server_id, 1, 60105, { 43 }));
+    ASSERT_FALSE(assert_int32_values(requester, server_id, 1, 60106, { 40 }));
 
-    ASSERT_TRUE(assert_string_values(requester, server_id, 1, 60203, "RED", 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60204, 43, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60205, 43, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60206, 40, 1));
+    ASSERT_TRUE(
+            assert_string_values(requester, server_id, 1, 60203, { "RED" }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60204, { 43 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60205, { 43 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60206, { 40 }));
 
-    ASSERT_TRUE(assert_string_values(requester, server_id, 1, 60303, "RED", 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60304, 43, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60305, 43, 1));
-    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60306, 40, 1));
+    ASSERT_TRUE(
+            assert_string_values(requester, server_id, 1, 60303, { "RED" }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60304, { 43 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60305, { 43 }));
+    ASSERT_TRUE(assert_int32_values(requester, server_id, 1, 60306, { 40 }));
+    gateway.stop();
+    server.stop();
 }
 
 TEST(IntegrationTests, MultipleSubscriptions)
@@ -599,9 +603,86 @@ TEST(IntegrationTests, MultipleSubscriptions)
     }
     // Check we've read all the samples we've written
     ASSERT_EQ(samples_read, samples_to_read);
-
     gateway.stop();
     server.stop();
+}
+
+TEST(IntegrationTests, E2EScenario)
+{
+    bool running = true;
+
+    // Instantiate OPC UA Server
+    OpcUaTutorialServer server;
+    server.start();
+
+    // Instantiate OPC UA/DDS Gateway
+    std::string cfg_file = utils::executable_path()
+            + "../src/test/IntegrationTestConfigurations.xml";
+    OpcUaDdsTutorialGateway gateway("E2ETestScenario", cfg_file);
+    gateway.start();
+
+    dds::domain::qos::DomainParticipantQos participant_qos;
+    participant_qos.policy<rti::core::policy::Database>()
+            .shutdown_cleanup_period(dds::core::Duration(0, 100000000));
+
+    dds::domain::DomainParticipant participant(0, participant_qos);
+
+    dds::pub::DataWriter<MyType> publication_writer(
+            dds::pub::Publisher(participant),
+            dds::topic::Topic<MyType>(participant, "E2EPublicationTopic"));
+    ASSERT_GE(wait_for_matching_subscription<MyType>(publication_writer), 1);
+
+    // Then create subscription
+    dds::sub::DataReader<MyType> subscription_reader(
+            dds::sub::Subscriber(participant),
+            dds::topic::Topic<MyType>(participant, "E2ESubscriptionTopic"));
+    ASSERT_GE(wait_for_matching_publication<MyType>(subscription_reader), 1);
+
+    // Prepare WaitSet
+    dds::core::cond::WaitSet waitset;
+    dds::sub::cond::ReadCondition read_condition(
+            subscription_reader,
+            dds::sub::status::DataState::any_data());
+    waitset += read_condition;
+
+    // Write a String Sequence
+    MyType original_sample;
+
+    std::vector<std::string> original_string(tutorials::MAX_LENGTH);
+    for (size_t i = 0; i < tutorials::MAX_LENGTH; ++i) {
+        original_string.at(i) = std::to_string(i);
+    };
+    original_sample.my_string_sequence(original_string);
+    publication_writer.write(original_sample);
+
+    // Validate we receive the same String Sequence
+    dds::core::cond::WaitSet::ConditionSeq active_conditions =
+            waitset.wait(dds::core::Duration(20));
+    ASSERT_GE(active_conditions.size(), 1);
+    dds::sub::LoanedSamples<MyType> samples = subscription_reader.take();
+    int samples_read = 0;
+    for (const auto& sample : samples) {
+        if (sample.info().valid()) {
+            ASSERT_TRUE(
+                    sample.data().my_string_sequence().size()
+                    == tutorials::MAX_LENGTH);
+            ASSERT_TRUE(std::equal(
+                    sample.data().my_string_sequence().begin(),
+                    sample.data().my_string_sequence().end(),
+                    original_sample.my_string_sequence().begin()));
+            samples_read++;
+        }
+    }
+    ASSERT_EQ(samples_read, 1);
+
+    // std::vector<int8_t> original_uint8(tutorials::MAX_LENGTH);
+    // for (size_t i = 0; i < tutorials::MAX_LENGTH; ++i) {
+    //     original_uint8.at(i) = static_cast<uint8_t>(i % UINT8_MAX);
+    // }
+    // original_sample.my_byte_array(original_string);
+    // publication_writer.write(original_sample);
+
+    gateway.stop();
 }
 
 }}}  // namespace rti::ddsopcua::test

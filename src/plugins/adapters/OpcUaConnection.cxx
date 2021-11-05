@@ -109,7 +109,10 @@ rti::routing::adapter::StreamReader* OpcUaConnection::create_stream_reader(
             opcua_subs_sr->initialize_subscription();
         } catch (const std::exception& e) {
             GATEWAYLog_exception(&DDSOPCUA_LOG_ANY_s, e.what());
-            opcua_subs_sr->finalize_subscription();
+            if (opcua_subs_sr != nullptr) {
+                opcua_subs_sr->finalize_subscription();
+            }
+            return nullptr;
         }
 
         stream_reader = opcua_subs_sr;

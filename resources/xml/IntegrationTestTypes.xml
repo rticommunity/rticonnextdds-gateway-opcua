@@ -144,7 +144,7 @@
         <member name="y" type="long" />
         <member name="shapesize" type="long" />
     </struct>
-    <const name="MAX_LENGTH" type="long" value="25"/>
+    <const name="MAX_LENGTH" type="long" value="100"/>
     <struct name="MyType">
         <member name="my_boolean" type="boolean" />
         <member name="my_byte" type="octet" />
