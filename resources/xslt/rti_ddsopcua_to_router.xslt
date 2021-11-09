@@ -156,6 +156,51 @@
         </xsl:element>
     </xsl:template>
 
+    <xsl:template name="ApplyRegisteredType">
+        <xsl:param name="dds_participant_name" />
+        <xsl:param name="dds_registered_type_name"/>
+        <xsl:element name="registered_type">
+            <xsl:attribute name="name">
+                <xsl:value-of select="$dds_registered_type_name"/>
+            </xsl:attribute>
+            <xsl:attribute name="type_name">
+                <xsl:value-of select="../../domain_participant[@name = $dds_participant_name]/register_type[@name = $dds_registered_type_name]/@type_ref"/>
+            </xsl:attribute>
+        </xsl:element>
+    </xsl:template>
+    <xsl:template name="AddRegisteredType"
+                  match="publication | subscription">
+        <xsl:param name="opcua_server_name"/>
+        <xsl:variable name="dds_participant_name">
+            <xsl:choose>
+                <xsl:when test="./opcua_input/@opcua_connection_ref = $opcua_server_name">
+                    <xsl:value-of select="./dds_output/@domain_participant_ref" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="./dds_input/@domain_participant_ref" />
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="dds_registered_type_name">
+            <xsl:choose>
+                <xsl:when test="./opcua_input/@opcua_connection_ref = $opcua_server_name">
+                    <xsl:value-of select="./dds_output/registered_type_name"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="./dds_input/registered_type_name"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <!-- Only register a type within a specific connection once -->
+        <xsl:if test="(count(preceding-sibling::subscription/dds_output[registered_type_name=$dds_registered_type_name]) = 0)
+                      and (count(preceding-sibling::publication/dds_input[registered_type_name=$dds_registered_type_name]) = 0)">
+            <xsl:call-template name="ApplyRegisteredType">
+                <xsl:with-param name="dds_participant_name" select="$dds_participant_name"/>
+                <xsl:with-param name="dds_registered_type_name" select="$dds_registered_type_name"/>
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
     <!--
       Template: Generates <connection> tags
     -->
@@ -202,45 +247,11 @@
                         </xsl:element>
                     </xsl:element>
                 </xsl:element>
-                <xsl:variable name="registered_type_list" />
 
                 <xsl:for-each select="../opcua_to_dds_bridge">
-                    <xsl:for-each select="./subscription">
-                        <xsl:if test="./opcua_input/@opcua_connection_ref = $opcua_server_name">
-                            <xsl:variable name="dds_participant_name"
-                                          select="./dds_output/@domain_participant_ref" />
-                            <xsl:variable name="dds_registered_type_name"
-                                          select="./dds_output/registered_type_name"/>
-                            <xsl:if test="../../domain_participant[@name = $dds_participant_name]/register_type[@name = $dds_registered_type_name]">
-                                <xsl:element name="registered_type">
-                                    <xsl:attribute name="name">
-                                        <xsl:value-of select="$dds_registered_type_name"/>
-                                    </xsl:attribute>
-                                    <xsl:attribute name="type_name">
-                                        <xsl:value-of select="../../domain_participant[@name = $dds_participant_name]/register_type[@name = $dds_registered_type_name]/@type_ref"/>
-                                    </xsl:attribute>
-                                </xsl:element>
-                            </xsl:if>
-                        </xsl:if>
-                    </xsl:for-each>
-                    <xsl:for-each select="./publication">
-                        <xsl:if test="./opcua_output/@opcua_connection_ref = $opcua_server_name">
-                            <xsl:variable name="dds_participant_name"
-                                          select="./dds_input/@domain_participant_ref" />
-                            <xsl:variable name="dds_registered_type_name"
-                                          select="./dds_input/registered_type_name"/>
-                            <xsl:if test="../../domain_participant[@name = $dds_participant_name]/register_type[@name = $dds_registered_type_name]">
-                                <xsl:element name="registered_type">
-                                    <xsl:attribute name="name">
-                                        <xsl:value-of select="$dds_registered_type_name"/>
-                                    </xsl:attribute>
-                                    <xsl:attribute name="type_name">
-                                        <xsl:value-of select="../../domain_participant[@name = $dds_participant_name]/register_type[@name = $dds_registered_type_name]/@type_ref"/>
-                                    </xsl:attribute>
-                                </xsl:element>
-                            </xsl:if>
-                        </xsl:if>
-                    </xsl:for-each>
+                    <xsl:apply-templates select="publication|subscription">
+                        <xsl:with-param name="opcua_server_name" select="$opcua_server_name"/>
+                    </xsl:apply-templates>
                 </xsl:for-each>
                 <xsl:element name="registered_type">
                     <xsl:attribute name="name">
