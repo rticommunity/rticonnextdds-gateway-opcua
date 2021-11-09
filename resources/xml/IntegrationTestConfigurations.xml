@@ -20,7 +20,7 @@
 <dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:noNamespaceSchemaLocation="../schema/rti_dds_opcua_service.xsd">
 
-    <ddsopcua_service name="E2ETestScenario">
+     <ddsopcua_service name="E2ETestScenario">
         <annotation>
             <documentation>
     This configuration creates to publications, which subscribe to two separate
