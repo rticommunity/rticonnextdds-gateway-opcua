@@ -437,6 +437,16 @@ OPC UA to DDS Bridge Tag
         See :numref:`section-subscription-tag`.
       - 0..*
 
+    * - :litrep:`<publisher_qos>`
+      - Configures the Publisher QoS of the DDS Publisher for every DDS
+        DataWriter associated with a DDS Output within the OPC UA to DDS Bridge.
+      - 0..1
+
+    * - :litrep:`<subscriber_qos>`
+      - Configures the Subscriber QoS of the DDS Subscriber for every DDS
+        DataReader associated with a DDS Input within the OPC UA to DDS Bridge.
+      - 0..1
+
 .. _section-service-set-tag:
 
 ServiceSet Tag

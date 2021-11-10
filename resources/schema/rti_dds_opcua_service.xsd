@@ -642,6 +642,32 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
+                <xs:element name="publisher_qos"
+                            minOccurs="0"
+                            type="publisherQosProfileChild">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Sets the PublisherQos of the DDS Publisher of all
+                            the DDS DataWriters associated with DDS Outputs
+                            within this OPC UA to DDS Bridge.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="subscriber_qos"
+                            minOccurs="0"
+                            type="subscriberQosProfileChild">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <![CDATA[
+                            Sets the SubscriberQos of the DDS Subscriber for all
+                            the DDS DataReaders associated with DDS Inputs
+                            within this OPC UA to DDS Bridge.
+                            ]]>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
             </xs:choice>
         </xs:sequence>
 

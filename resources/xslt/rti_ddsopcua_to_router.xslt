@@ -699,6 +699,8 @@
                 <xsl:attribute name="name">
                     <xsl:value-of select="./@name" />
                 </xsl:attribute>
+                <xsl:copy-of select="publisher_qos"/>
+                <xsl:copy-of select="subscriber_qos"/>
                 <xsl:call-template name="DdsOpcUaRoutes" >
                     <xsl:with-param name="service_name"
                                     select="$service_name" />
