@@ -80,6 +80,7 @@ connextdds_rtiddsgen_run(
         "${CMAKE_CURRENT_BINARY_DIR}/src/conversion/"
     LANG C++11
     UNBOUNDED
+    EXTRA_ARGS "-disableXSDValidation"
 )
 
 connextdds_embed_source_file(
@@ -426,6 +427,7 @@ if (RTIGATEWAY_BUILD_TESTS)
             "${CMAKE_CURRENT_BINARY_DIR}/src/test/"
         LANG C++11
         UNBOUNDED
+        EXTRA_ARGS "-disableXSDValidation"
     )
 
     set(rtiddsopcua_test_sources
