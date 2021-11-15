@@ -68,10 +68,9 @@ connextdds_rtiddsgen_run(
         "${CMAKE_CURRENT_BINARY_DIR}/src/conversion/"
     LANG C++11
     UNBOUNDED
-    EXTRA_ARGS "-disableXSDValidation"
 )
 
- add_executable(tutorial-dds-requester
+add_executable(tutorial-dds-requester
     "${CMAKE_CURRENT_SOURCE_DIR}/ddsRequester/CommandlineParser.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ddsRequester/Conversions.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ddsRequester/Main.cxx"

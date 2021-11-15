@@ -210,5 +210,5 @@ run the *OPC UA/DDS Gateway*.
           ├── scripts
           │   └── rticommon.sh
           └── xml
-              ├── OpcUaBuiltinDataTypes.xml
-              └── RTI_DDS_OPCUA_SERVICE.xml
+              ├── RTI_DDS_OPCUA_SERVICE.xml
+              └── RTI_DDS_OPCUA_SERVICE_TYPES.xml

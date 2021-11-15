@@ -68,9 +68,20 @@ connextdds_copy_files(
 connextdds_copy_files(
     INPUT_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/RTI_DDS_OPCUA_SERVICE.xml"
-        "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/OpcUaBuiltinDataTypes.xml"
     OUTPUT_DIR
         "${CMAKE_CURRENT_BINARY_DIR}/resources/xml"
+)
+
+set(RTI_DDS_TOPIC_TYPES_SCHEMA_LOCATION "https://community.rti.com/schema/${RTICONNEXTDDS_VERSION}")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/OpcUaBuiltinDataTypes.xml"
+    "${CMAKE_CURRENT_BINARY_DIR}/resources/xml/RTI_DDS_OPCUA_SERVICE_TYPES.xml"
+)
+
+set(RTI_DDS_TOPIC_TYPES_SCHEMA_LOCATION "${CONNEXTDDS_DIR}/resource/schema")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/OpcUaBuiltinDataTypes.xml"
+    "${CMAKE_CURRENT_BINARY_DIR}/resources/xml/OpcUaBuiltinDataTypes.xml"
 )
 
 connextdds_rtiddsgen_run(
@@ -80,7 +91,6 @@ connextdds_rtiddsgen_run(
         "${CMAKE_CURRENT_BINARY_DIR}/src/conversion/"
     LANG C++11
     UNBOUNDED
-    EXTRA_ARGS "-disableXSDValidation"
 )
 
 connextdds_embed_source_file(
@@ -320,10 +330,10 @@ install(DIRECTORY "${CMAKE_BINARY_DIR}/resources/schema/"
    USE_SOURCE_PERMISSIONS
 )
 
-# Configuration files
-install(DIRECTORY "${CMAKE_BINARY_DIR}/resources/xml/"
-   DESTINATION resource/xml
-   USE_SOURCE_PERMISSIONS
+install(FILES
+    "${CMAKE_BINARY_DIR}/resources/xml/RTI_DDS_OPCUA_SERVICE.xml"
+    "${CMAKE_BINARY_DIR}/resources/xml/RTI_DDS_OPCUA_SERVICE_TYPES.xml"
+    DESTINATION resource/xml
 )
 
 if (BUILD_SHARED_LIBS)
@@ -413,21 +423,23 @@ if (RTIGATEWAY_BUILD_TESTS)
 
     connextdds_copy_files(
         INPUT_FILES
-            "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/IntegrationTestTypes.xml"
             "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/IntegrationTestConfigurations.xml"
-            "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/OpcUaBuiltinDataTypes.xml"
         OUTPUT_DIR
-            "${CMAKE_CURRENT_BINARY_DIR}/src/test"
+            "${CMAKE_CURRENT_BINARY_DIR}/resources/xml"
+    )
+
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/resources/xml/IntegrationTestTypes.xml"
+        "${CMAKE_CURRENT_BINARY_DIR}/resources/xml/IntegrationTestTypes.xml"
     )
 
     connextdds_rtiddsgen_run(
         IDL_FILE
-            "${CMAKE_CURRENT_BINARY_DIR}/src/test/IntegrationTestTypes.xml"
+            "${CMAKE_CURRENT_BINARY_DIR}/resources/xml/IntegrationTestTypes.xml"
         OUTPUT_DIRECTORY
             "${CMAKE_CURRENT_BINARY_DIR}/src/test/"
         LANG C++11
         UNBOUNDED
-        EXTRA_ARGS "-disableXSDValidation"
     )
 
     set(rtiddsopcua_test_sources

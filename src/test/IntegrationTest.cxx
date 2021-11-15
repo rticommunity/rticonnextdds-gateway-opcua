@@ -218,6 +218,25 @@ bool assert_bool_values(
             value.begin());
 }
 
+template<typename T>
+bool write_sample_and_wait(
+        dds::pub::DataWriter<T>& writer,
+        dds::sub::DataReader<T>& reader,
+        const T& sample)
+{
+    writer.write(sample);
+    int sleeps = 0;
+    int max_seconds = 10; // wait for up to 10 seconds
+    bool result = (reader.read().length() > 0);
+    while (!result && sleeps < max_seconds * 10) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        ++sleeps;
+        result = (reader.read().length() > 0);
+    }
+
+    return result;
+}
+
 TEST(IntegrationTests, Tutorial1)
 {
     // Instantiate OPC UA Server
@@ -611,70 +630,50 @@ TEST(IntegrationTests, E2EScenario)
 
     // Instantiate OPC UA/DDS Gateway
     std::string cfg_file = utils::executable_path()
-            + "../src/test/IntegrationTestConfigurations.xml";
+            + "../resources/xml/IntegrationTestConfigurations.xml";
     OpcUaDdsTutorialGateway gateway("E2ETestScenario", cfg_file);
     gateway.start();
 
-    // dds::domain::qos::DomainParticipantQos participant_qos;
-    // participant_qos.policy<rti::core::policy::Database>()
-    //         .shutdown_cleanup_period(dds::core::Duration(0, 100000000));
+    dds::domain::qos::DomainParticipantQos participant_qos;
+    participant_qos.policy<rti::core::policy::Database>()
+            .shutdown_cleanup_period(dds::core::Duration(0, 100000000));
 
-    // dds::domain::DomainParticipant participant(0, participant_qos);
+    dds::domain::DomainParticipant participant(0, participant_qos);
 
-    // dds::pub::DataWriter<MyType> publication_writer(
-    //         dds::pub::Publisher(participant),
-    //         dds::topic::Topic<MyType>(participant, "E2EPublicationTopic"));
-    // ASSERT_GE(wait_for_matching_subscription<MyType>(publication_writer), 1);
+    dds::pub::DataWriter<MyType> writer(
+            dds::pub::Publisher(participant),
+            dds::topic::Topic<MyType>(participant, "E2EPublicationTopic"));
+    ASSERT_GE(wait_for_matching_subscription<MyType>(writer), 1);
 
-    // // Then create subscription
-    // dds::sub::DataReader<MyType> subscription_reader(
-    //         dds::sub::Subscriber(participant),
-    //         dds::topic::Topic<MyType>(participant, "E2ESubscriptionTopic"));
-    // ASSERT_GE(wait_for_matching_publication<MyType>(subscription_reader), 1);
+    // Then create subscription
+    dds::sub::DataReader<MyType> reader(
+            dds::sub::Subscriber(participant),
+            dds::topic::Topic<MyType>(participant, "E2ESubscriptionTopic"));
+    ASSERT_GE(wait_for_matching_publication<MyType>(reader), 1);
 
-    // // Prepare WaitSet
-    // dds::core::cond::WaitSet waitset;
-    // dds::sub::cond::ReadCondition read_condition(
-    //         subscription_reader,
-    //         dds::sub::status::DataState::any_data());
-    // waitset += read_condition;
+    // Write a String Sequence
+    MyType original_sample;
 
-    // // Write a String Sequence
-    // MyType original_sample;
+    std::vector<std::string> original_string(tutorials::MAX_LENGTH);
+    for (size_t i = 0; i < tutorials::MAX_LENGTH; ++i) {
+        original_string.at(i) = std::to_string(i);
+    };
+    original_sample.my_string_sequence(original_string);
+    ASSERT_TRUE(write_sample_and_wait(writer, reader, original_sample));
 
-    // std::vector<std::string> original_string(tutorials::MAX_LENGTH);
-    // for (size_t i = 0; i < tutorials::MAX_LENGTH; ++i) {
-    //     original_string.at(i) = std::to_string(i);
-    // };
-    // original_sample.my_string_sequence(original_string);
-    // publication_writer.write(original_sample);
-
-    // // Validate we receive the same String Sequence
-    // dds::core::cond::WaitSet::ConditionSeq active_conditions =
-    //         waitset.wait(dds::core::Duration(20));
-    // ASSERT_GE(active_conditions.size(), 1);
-    // dds::sub::LoanedSamples<MyType> samples = subscription_reader.take();
-    // int samples_read = 0;
-    // for (const auto& sample : samples) {
-    //     if (sample.info().valid()) {
-    //         ASSERT_TRUE(
-    //                 sample.data().my_string_sequence().size()
-    //                 == tutorials::MAX_LENGTH);
-    //         ASSERT_TRUE(std::equal(
-    //                 sample.data().my_string_sequence().begin(),
-    //                 sample.data().my_string_sequence().end(),
-    //                 original_sample.my_string_sequence().begin()));
-    //         samples_read++;
-    //     }
-    // }
-    // ASSERT_EQ(samples_read, 1);
-
-    // // std::vector<int8_t> original_uint8(tutorials::MAX_LENGTH);
-    // // for (size_t i = 0; i < tutorials::MAX_LENGTH; ++i) {
-    // //     original_uint8.at(i) = static_cast<uint8_t>(i % UINT8_MAX);
-    // // }
-    // // original_sample.my_byte_array(original_string);
-    // // publication_writer.write(original_sample);
+    dds::sub::LoanedSamples<MyType> samples = reader.take();
+    ASSERT_EQ(samples.length(), 1);
+    for (const auto& sample : samples) {
+        if (sample.info().valid()) {
+            ASSERT_TRUE(
+                    sample.data().my_string_sequence().size()
+                    == tutorials::MAX_LENGTH);
+            ASSERT_TRUE(std::equal(
+                    sample.data().my_string_sequence().begin(),
+                    sample.data().my_string_sequence().end(),
+                    original_sample.my_string_sequence().begin()));
+        }
+    }
 
     gateway.stop();
 }
