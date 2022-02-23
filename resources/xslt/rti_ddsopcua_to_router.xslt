@@ -434,7 +434,7 @@
             </xsl:element>
             <xsl:copy-of select="./topic_name"/>
             <xsl:copy-of select="./registered_type_name"/>
-            <xsl:copy-of select="./datawriter_qos"/>
+            <xsl:copy-of select="./datareader_qos"/>
         </xsl:element>
     </xsl:template>
 
