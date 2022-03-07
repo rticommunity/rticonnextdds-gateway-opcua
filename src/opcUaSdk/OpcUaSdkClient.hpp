@@ -91,7 +91,7 @@ public:
             const sdk::types::NodeId& node_id,
             const sdk::types::Variant& value);
 
-    void run_iterate(uint16_t timeout);
+    uint32_t run_iterate(uint16_t timeout);
 
 private:
     UA_Client* client_;

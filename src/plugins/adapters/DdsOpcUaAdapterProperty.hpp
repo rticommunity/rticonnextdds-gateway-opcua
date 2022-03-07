@@ -19,7 +19,7 @@
 #define RTI_OPCUA_ADAPTER_DDSOPCUA_ADAPTER_PROPERTIES_HPP_
 
 #include "config/XmlSupport.hpp"
-
+#include "service/Utils.hpp"
 namespace rti { namespace ddsopcua { namespace adapters {
 
 class DdsOpcUaAdapterProperty {
@@ -33,6 +33,7 @@ public:
      * @param service_name Name of the service instance
      */
     DdsOpcUaAdapterProperty(
+            rti::ddsopcua::utils::ServiceShutdownHook& shutdown_hook,
             RTIXMLUTILSObject* xml_root,
             const std::string& service_name);
 
@@ -41,6 +42,12 @@ public:
      * @param adapter Reference to adapter to be copied
      */
     DdsOpcUaAdapterProperty(const DdsOpcUaAdapterProperty& adapter);
+
+    /**
+     * Returns a reference to the RTI_RoutingServiceRemoteShutdownHook that
+     * can stop the Service.
+     */
+    rti::ddsopcua::utils::ServiceShutdownHook& shutdown_hook() const;
 
     /**
      * Returns a const reference to the service name of the
@@ -63,6 +70,7 @@ public:
     DdsOpcUaAdapterProperty& xml_root(RTIXMLUTILSObject* xml_root);
 
 private:
+    rti::ddsopcua::utils::ServiceShutdownHook& shutdown_hook_;
     RTIXMLUTILSObject* xml_root_;
     const std::string service_name_;
 };

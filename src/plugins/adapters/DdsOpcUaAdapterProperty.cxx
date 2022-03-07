@@ -20,16 +20,27 @@
 namespace rti { namespace ddsopcua { namespace adapters {
 
 DdsOpcUaAdapterProperty::DdsOpcUaAdapterProperty(
+        rti::ddsopcua::utils::ServiceShutdownHook& shutdown_hook,
         RTIXMLUTILSObject* xml_root,
         const std::string& service_name)
-        : xml_root_(xml_root), service_name_(service_name)
+        : shutdown_hook_(shutdown_hook),
+          xml_root_(xml_root),
+          service_name_(service_name)
 {
 }
 
 DdsOpcUaAdapterProperty::DdsOpcUaAdapterProperty(
         const DdsOpcUaAdapterProperty& adapter)
-        : xml_root_(adapter.xml_root()), service_name_(adapter.service_name())
+        : shutdown_hook_(adapter.shutdown_hook()),
+          xml_root_(adapter.xml_root()),
+          service_name_(adapter.service_name())
 {
+}
+
+rti::ddsopcua::utils::ServiceShutdownHook& DdsOpcUaAdapterProperty::
+        shutdown_hook() const
+{
+    return shutdown_hook_;
 }
 
 const std::string& DdsOpcUaAdapterProperty::service_name() const

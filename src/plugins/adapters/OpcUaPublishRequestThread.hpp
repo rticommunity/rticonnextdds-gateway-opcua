@@ -39,9 +39,11 @@ public:
      */
     AsyncClientThread(
             opcua::sdk::client::Client& opcua_client,
+            rti::ddsopcua::utils::ServiceShutdownHook& service_shutdown_hook,
             const std::string& thread_name)
             : Thread(thread_name),
               opcua_client_(opcua_client),
+              service_shutdown_hook_(service_shutdown_hook),
               exit_condition_(false),
               timeout_(0)
     {
@@ -60,8 +62,13 @@ public:
      */
     void run()
     {
+        uint32_t retcode = 0;
         while (!exit_condition_) {
-            opcua_client_.run_iterate(timeout_);
+            retcode = opcua_client_.run_iterate(timeout_);
+            if (retcode != 0) {
+                exit_condition_ = true;
+                service_shutdown_hook_.shutdown_service();
+            }
         }
     }
 
@@ -99,6 +106,7 @@ public:
 
 private:
     opcua::sdk::client::Client& opcua_client_;
+    rti::ddsopcua::utils::ServiceShutdownHook& service_shutdown_hook_;
     bool exit_condition_;
     uint16_t timeout_;
 };

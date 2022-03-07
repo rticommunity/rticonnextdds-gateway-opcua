@@ -166,6 +166,21 @@ private:
     std::string exception_message_;
 };
 
+class ServiceShutdownHook {
+public:
+    ServiceShutdownHook(const RTI_RoutingServiceRemoteShutdownHook* hook)
+            : shutdown_hook_(hook)
+    {
+    }
+    void shutdown_service()
+    {
+        return shutdown_hook_->on_shutdown(shutdown_hook_->shutdown_hook_data);
+    }
+
+private:
+    const RTI_RoutingServiceRemoteShutdownHook* shutdown_hook_;
+};
+
 }}}  // namespace rti::ddsopcua::utils
 
 #endif /* SERVICE_UTILS_HPP_ */

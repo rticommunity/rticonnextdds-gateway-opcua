@@ -25,6 +25,7 @@
 #include <rti/ddsopcua/DdsOpcUaGatewayProperty.hpp>
 
 #include "config/XmlSupport.hpp"
+#include "Utils.hpp"
 
 namespace rti { namespace ddsopcua { namespace service {
 
@@ -91,6 +92,7 @@ private:
     config::XmlSupport xml_support_;
     rti::routing::ServiceProperty routing_service_property_;
     rti::routing::RoutingService routing_service_;
+    rti::ddsopcua::utils::ServiceShutdownHook shutdown_hook_;
 };
 
 }}}  // namespace rti::ddsopcua::service

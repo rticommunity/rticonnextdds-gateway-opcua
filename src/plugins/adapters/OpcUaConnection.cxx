@@ -21,6 +21,7 @@
 #include "plugins/adapters/OpcUaAttributeServiceStreamWriter.hpp"
 #include "plugins/adapters/OpcUaSubscriptionStreamReader.hpp"
 #include "plugins/adapters/OpcUaConnection.hpp"
+#include "service/Utils.hpp"
 
 namespace rti { namespace ddsopcua { namespace adapters {
 
@@ -34,6 +35,7 @@ OpcUaConnection::OpcUaConnection(
           opcua_client_(),
           opcua_client_async_thread_(
                   opcua_client_,
+                  adapter_property.shutdown_hook(),
                   "OPC UA Client Async Thread")
 {
     // Fully-qualified name of the opcua server property associated with the
