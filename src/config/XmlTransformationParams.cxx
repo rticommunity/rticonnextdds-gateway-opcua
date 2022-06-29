@@ -15,6 +15,8 @@
  * the Software.
  */
 
+#include <dds_c/dds_c_typecode.h>
+
 #include "config/XmlTransformationParams.hpp"
 
 namespace rti { namespace ddsopcua { namespace config {
@@ -90,13 +92,13 @@ const std::vector<RTIXMLUTILSTransformationParameter>& XmlTransformationParams::
         // DDSOPCUA_PLUGIN_NAME
         parameter.name = DDSOPCUA_PLUGIN_NAME_PARAM.c_str();
         parameter.value = DDSOPCUA_PLUGIN_NAME_PROPERTY.c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_DOMAIN_ROUTE_NAME
         parameter.name = DDSOPCUA_DOMAIN_ROUTE_NAME_PARAM.c_str();
         parameter.value = DDSOPCUA_DOMAIN_ROUTE_NAME_PROPERTY.c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_OPCUA2DDS_PLUGIN_NAME_ATTRIBUTE_SERVICE
@@ -105,7 +107,7 @@ const std::vector<RTIXMLUTILSTransformationParameter>& XmlTransformationParams::
         parameter.value =
                 DDSOPCUA_OPCUA2DDS_PLUGIN_NAME_ATTRIBUTE_SERVICE_PROPERTY
                         .c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_OPCUA2DDS_PLUGIN_NAME_ATTRIBUTE_SERVICE
@@ -114,7 +116,7 @@ const std::vector<RTIXMLUTILSTransformationParameter>& XmlTransformationParams::
         parameter.value =
                 DDSOPCUA_OPCUA2DDS_PLUGIN_NAME_OPCUA_PUBLICATION_PROPERTY
                         .c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_OPCUA2DDS_PUBLICATION_DDS_INPUT_FQN_PROPERTY_NAME
@@ -122,7 +124,7 @@ const std::vector<RTIXMLUTILSTransformationParameter>& XmlTransformationParams::
                 DDSOPCUA_OPCUA2DDS_PUBLICATION_DDS_INPUT_FQN_PARAM.c_str();
         parameter.value =
                 DDSOPCUA_OPCUA2DDS_PUBLICATION_DDS_INPUT_FQN_PROPERTY.c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_OPCUA2DDS_PUBLICATION_OPCUA_OUTPUT_FQN_PROPERTY_NAME
@@ -131,25 +133,25 @@ const std::vector<RTIXMLUTILSTransformationParameter>& XmlTransformationParams::
         parameter.value =
                 DDSOPCUA_OPCUA2DDS_PUBLICATION_OPCUA_OUTPUT_FQN_PROPERTY
                         .c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_OPCUA2DDS_SUBSCRIPTION_FQN_PROPERTY_NAME
         parameter.name = DDSOPCUA_OPCUA2DDS_SUBSCRIPTION_FQN_PARAM.c_str();
         parameter.value = DDSOPCUA_OPCUA2DDS_SUBSCRIPTION_FQN_PROPERTY.c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_OPCUA_CONNECTION_FQN_PROPERTY_NAME
         parameter.name = DDSOPCUA_OPCUA_CONNECTION_FQN_PARAM.c_str();
         parameter.value = DDSOPCUA_OPCUA_CONNECTION_FQN_PROPERTY.c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
 
         // DDSOPCUA_OPCUA_CONNECTION_SERVER_URL_PROPERTY_NAME
         parameter.name = DDSOPCUA_OPCUA_CONNECTION_SERVER_URL_PARAM.c_str();
         parameter.value = DDSOPCUA_OPCUA_CONNECTION_SERVER_URL_PROPERTY.c_str();
-        parameter.valueKind = RTI_CDR_TK_STRING;
+        parameter.valueKind = static_cast<RTICdrTCKind>(DDS_TK_STRING);
         transformation_params_.push_back(parameter);
     }
 
