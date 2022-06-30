@@ -17,7 +17,7 @@
 setlocal EnableDelayedExpansion
 
 set appName=${LAUNCH_EXECUTABLE_NAME}
-set executableName=${LAUNCH_EXECUTABLE_NAME}.exe
+set executableName=${LAUNCH_EXECUTABLE_NAME}app.exe
 set scriptVersion=${CONNEXTDDS_VERSION}
 
 set dir=%~dp0
