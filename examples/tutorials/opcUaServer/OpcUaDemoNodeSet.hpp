@@ -269,9 +269,9 @@ public:
                     attr,
                     nullptr,
                     nullptr);
-            UA_Variant_deleteMembers(&attr.value);
-            UA_LocalizedText_deleteMembers(&attr.displayName);
-            UA_QualifiedName_deleteMembers(&qualified_name);
+            UA_Variant_clear(&attr.value);
+            UA_LocalizedText_clear(&attr.displayName);
+            UA_QualifiedName_clear(&qualified_name);
         }
     }
 
@@ -353,9 +353,9 @@ public:
                 std::cerr << "Error creating " << qualified_name.name.data
                           << std::endl;
             }
-            UA_Variant_deleteMembers(&attr.value);
-            UA_LocalizedText_deleteMembers(&attr.displayName);
-            UA_QualifiedName_deleteMembers(&qualified_name);
+            UA_Variant_clear(&attr.value);
+            UA_LocalizedText_clear(&attr.displayName);
+            UA_QualifiedName_clear(&qualified_name);
         }
     }
 

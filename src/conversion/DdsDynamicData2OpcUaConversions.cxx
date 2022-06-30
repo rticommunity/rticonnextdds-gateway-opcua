@@ -159,7 +159,7 @@ void set_opc_ua_value<UA_Guid, opcua::types::Guid>(
 template<>
 void unset_opc_ua_value<UA_String>(UA_String& opcua_value)
 {
-    UA_String_deleteMembers(&opcua_value);
+    UA_String_clear(&opcua_value);
 }
 
 template<>

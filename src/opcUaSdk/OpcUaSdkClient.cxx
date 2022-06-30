@@ -37,6 +37,9 @@ static void client_state_fnc(
         UA_StatusCode connection_status)
 {
     switch (channel_state) {
+    case UA_SECURECHANNELSTATE_FRESH:
+        GATEWAYLog_warn(&DDSOPCUA_LOG_ANY_s, "New/Fresh secure channel");
+        break;
     case UA_SECURECHANNELSTATE_CLOSED:
         GATEWAYLog_warn(&DDSOPCUA_LOG_ANY_s, "The client is disconnected");
         break;

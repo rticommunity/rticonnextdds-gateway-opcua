@@ -150,7 +150,7 @@ public:
     ~Variant()
     {
         if (variant_ != nullptr) {
-            UA_Variant_deleteMembers(variant_);
+            UA_Variant_clear(variant_);
             UA_Variant_delete(variant_);
         }
     }
