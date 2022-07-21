@@ -22,7 +22,6 @@
 
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/server.h>
-#include <open62541/server_config.h>
 #include <open62541/server_config_default.h>
 
 namespace rti { namespace ddsopcua { namespace tutorials {
@@ -51,9 +50,8 @@ public:
         UA_ServerConfig_setMinimal(config, port, nullptr);
 
         if (hostname != "") {
-            UA_ServerConfig_setCustomHostname(
-                    config,
-                    UA_STRING(const_cast<char*>(hostname.c_str())));
+            config->customHostname =
+                    UA_STRING(const_cast<char*>(hostname.c_str()));
         }
     }
 
