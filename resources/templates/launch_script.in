@@ -16,7 +16,7 @@
 
 filename=$0
 script_dir=`cd "\`dirname "$filename"\`"; pwd`
-executable_name=@LAUNCH_EXECUTABLE_NAME@app
+executable_name=@LAUNCH_EXECUTABLE_NAME@
 script_version=@RTICONNEXTDDS_VERSION@
 
 rticommon_script_dir=$script_dir/../resource/scripts
