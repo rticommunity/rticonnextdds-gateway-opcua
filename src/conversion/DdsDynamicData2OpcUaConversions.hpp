@@ -15,8 +15,7 @@
  * the Software.
  */
 
-#include <rtiboost/core/enable_if.hpp>
-#include <rtiboost/type_traits/is_arithmetic.hpp>
+#include <type_traits>
 
 #include <rti/core/constants.hpp>
 #include <dds/core/xtypes/DynamicData.hpp>
@@ -29,7 +28,6 @@ namespace rti { namespace ddsopcua { namespace conversion {
 
 using namespace dds::core::xtypes;
 using namespace rti::core::xtypes;
-using namespace rtiboost;
 
 template<typename OPCUA_TYPE, typename DDS_TYPE>
 void set_opc_ua_value(
@@ -163,7 +161,7 @@ void set_variant_scalar(
 }
 
 template<typename OPCUA_TYPE, typename DDS_TYPE>
-typename enable_if_c<is_arithmetic<DDS_TYPE>::value, void>::type
+typename std::enable_if<std::is_arithmetic<DDS_TYPE>::value, void>::type
 set_variant_array(
         opcua::sdk::types::Variant& variant,
         DynamicData& dd_variant,
@@ -180,7 +178,7 @@ set_variant_array(
 }
 
 template<typename OPCUA_TYPE, typename DDS_TYPE>
-typename enable_if_c<!is_arithmetic<DDS_TYPE>::value, void>::type
+typename std::enable_if<!std::is_arithmetic<DDS_TYPE>::value, void>::type
 set_variant_array(
         opcua::sdk::types::Variant& variant,
         DynamicData& dd_variant,

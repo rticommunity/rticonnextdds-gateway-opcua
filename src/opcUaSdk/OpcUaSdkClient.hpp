@@ -22,7 +22,6 @@
 
 #include <dds/core/Duration.hpp>
 #include <rti/core/Semaphore.hpp>
-#include <rtiboost/shared_ptr.hpp>
 
 #include <rti/ddsopcua/DdsOpcUaGatewayException.hpp>
 

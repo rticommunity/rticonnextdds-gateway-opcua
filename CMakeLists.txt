@@ -28,7 +28,7 @@ set(CMAKE_MODULE_PATH
 )
 
 find_package(
-    RTIConnextDDS "6.1.0"
+    RTIConnextDDS "6.1.1"
     REQUIRED
     COMPONENTS
         core
@@ -194,7 +194,6 @@ add_library(rtiddsopcuagateway-lib
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaAttributeServiceStreamWriter.cxx"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaConnection.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaConnection.cxx"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaPublishRequestThread.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaSubscriptionStreamReader.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaSubscriptionStreamReader.cxx"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaAttributeServiceStreamWriter.cxx"

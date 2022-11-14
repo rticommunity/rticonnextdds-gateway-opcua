@@ -31,10 +31,7 @@ OpcUaConnection::OpcUaConnection(
           connection_property_(connection_property),
           async_stream_readers_(),
           opcua_attributeservice_streamreader_(nullptr),
-          opcua_client_(),
-          opcua_client_async_thread_(
-                  opcua_client_,
-                  "OPC UA Client Async Thread")
+          opcua_client_()
 {
     // Fully-qualified name of the opcua server property associated with the
     // connection
@@ -49,7 +46,7 @@ OpcUaConnection::OpcUaConnection(
             adapter_property_.xml_root(),
             opcua_server_xml_fqn);
     opcua_client_.reset(client_property);
-    opcua_client_async_thread_.timeout(client_property.run_async_timeout);
+    run_async_timeout_ = client_property.run_async_timeout;
 
     // Connect to new OPC UA Client
     std::string server_uri = connection_property_.at(
@@ -118,7 +115,11 @@ rti::routing::adapter::StreamReader* OpcUaConnection::create_stream_reader(
         stream_reader = opcua_subs_sr;
 
         if (async_stream_readers_.size() == 0) {
-            opcua_client_async_thread_.start();
+            opcua_client_async_thread_ = std::thread(
+                    run_opcua_client,
+                    std::ref(opcua_client_),
+                    std::ref(async_stream_readers_),
+                    run_async_timeout_);
         }
         async_stream_readers_.push_back(
                 reinterpret_cast<uintptr_t>(stream_reader));
@@ -143,13 +144,23 @@ void OpcUaConnection::delete_stream_reader(
     delete stream_reader;
 
     if (async_stream_readers_.size() == 0) {
-        opcua_client_async_thread_.stop();
+        opcua_client_async_thread_.join();
     }
 }
 
 rti::opcua::sdk::client::Client& OpcUaConnection::connection_client()
 {
     return opcua_client_;
+}
+
+void OpcUaConnection::run_opcua_client(
+            opcua::sdk::client::Client& opcua_client,
+            const std::vector<uintptr_t>& async_stream_readers,
+            const uint16_t timeout)
+{
+    while (async_stream_readers.size() > 0) {
+        opcua_client.run_iterate(timeout);
+    }
 }
 
 }}}  // namespace rti::ddsopcua::adapters

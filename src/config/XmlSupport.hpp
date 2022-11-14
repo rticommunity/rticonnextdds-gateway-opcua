@@ -32,7 +32,7 @@ namespace rti { namespace ddsopcua { namespace config {
 class XmlSupport {
 public:
     /**
-     * native_xmlutilsobject is a shared_ptr to RTIXMLUTILSObject
+     * native_xmlutilsobject is a std::unique_ptr to RTIXMLUTILSObject
      */
     using native_xmlutilsobject =
             std::unique_ptr<RTIXMLUTILSObject, void (*)(RTIXMLUTILSObject*)>;

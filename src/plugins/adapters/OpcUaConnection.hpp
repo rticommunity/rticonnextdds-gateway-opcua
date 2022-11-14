@@ -19,13 +19,13 @@
 #define RTI_OPCUA_ADAPTER_OPCUACONNECTION_HPP_
 
 #include <cstdint>
+#include <thread>
 
 #include <rti/routing/PropertySet.hpp>
 #include <rti/routing/adapter/Connection.hpp>
 
 #include "plugins/adapters/DdsOpcUaAdapterProperty.hpp"
 #include "plugins/adapters/OpcUaAttributeServiceStreamReader.hpp"
-#include "plugins/adapters/OpcUaPublishRequestThread.hpp"
 #include "opcUaSdk/OpcUaSdkClient.hpp"
 
 namespace rti { namespace ddsopcua { namespace adapters {
@@ -56,12 +56,19 @@ public:
     opcua::sdk::client::Client& connection_client();
 
 private:
+    static void run_opcua_client(
+            opcua::sdk::client::Client& client,
+            const std::vector<uintptr_t>& async_stream_readers,
+            const uint16_t timeout);
+
+private:
     const DdsOpcUaAdapterProperty& adapter_property_;
     const rti::routing::PropertySet& connection_property_;
     std::vector<uintptr_t> async_stream_readers_;
     opcua::sdk::client::Client opcua_client_;
     OpcUaAttributeServiceStreamReader* opcua_attributeservice_streamreader_;
-    AsyncClientThread opcua_client_async_thread_;
+    std::thread opcua_client_async_thread_;
+    uint16_t run_async_timeout_;
 };
 
 }}}  // namespace rti::ddsopcua::adapters

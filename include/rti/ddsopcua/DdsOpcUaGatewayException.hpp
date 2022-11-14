@@ -19,6 +19,7 @@
 #define RTI_DDSOPCUA_GATEWAY_EXCEPTION_HPP_
 
 #include "routingservice/routingservice_log.h"
+#include "ndds/ndds_version.h"
 
 #include <dds/core/Exception.hpp>
 #include <dds/core/types.hpp>
@@ -51,7 +52,11 @@ public:
             const RTILogMessage* log_message,
             ...)
             : message_(RTI_LOG_MSG_SIZE_MAX, '\0'),
+#if RTI_DDS_VERSION_MAJOR >= 7
+              error_code_(log_message->messageId)
+#else
               error_code_(log_message->logNumber)
+#endif
     {
         va_list ap;
         va_start(ap, log_message);

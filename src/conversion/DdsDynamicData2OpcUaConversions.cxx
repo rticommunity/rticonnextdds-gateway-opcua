@@ -363,13 +363,13 @@ void dds_dynamic_data_variant_type_to_opc_ua_variant_scalar(
                 "uint32_value[0]");
     } break;
     case opcua::types::BuiltinTypeKind::INT64_TYPE: {
-        set_variant_scalar<UA_Int64, rti::core::int64>(
+        set_variant_scalar<UA_Int64, int64_t>(
                 variant,
                 variant_value,
                 "int64_value[0]");
     } break;
     case opcua::types::BuiltinTypeKind::UINT64_TYPE: {
-        set_variant_scalar<UA_UInt64, rti::core::uint64>(
+        set_variant_scalar<UA_UInt64, uint64_t>(
                 variant,
                 variant_value,
                 "uint64_value[0]");
@@ -498,13 +498,13 @@ void dds_dynamic_data_variant_type_to_opc_ua_variant_array(
                 "uint32_value");
     } break;
     case opcua::types::BuiltinTypeKind::INT64_TYPE: {
-        set_variant_array<UA_Int64, rti::core::int64>(
+        set_variant_array<UA_Int64, DDS_LongLong>(
                 variant,
                 variant_value,
                 "int64_value");
     } break;
     case opcua::types::BuiltinTypeKind::UINT64_TYPE: {
-        set_variant_array<UA_UInt64, rti::core::uint64>(
+        set_variant_array<UA_UInt64, DDS_UnsignedLongLong>(
                 variant,
                 variant_value,
                 "uint64_value");
@@ -528,7 +528,7 @@ void dds_dynamic_data_variant_type_to_opc_ua_variant_array(
                 "string_value");
     } break;
     case opcua::types::BuiltinTypeKind::DATETIME_TYPE: {
-        set_variant_array<UA_Int64, rti::core::int64>(
+        set_variant_array<UA_Int64, DDS_LongLong>(
                 variant,
                 variant_value,
                 "datetime_value");
@@ -677,12 +677,12 @@ void dds_dynamic_data_array_member_to_dds_dynamic_data_variant(
     case dds::core::xtypes::TypeKind::INT_64_TYPE: {
         variant.set_values(
                 "value.int64_value",
-                data.get_values<rti::core::int64>(member_name));
+                data.get_values<DDS_LongLong>(member_name));
     } break;
     case dds::core::xtypes::TypeKind::UINT_64_TYPE: {
         variant.set_values(
                 "value.uint64_value",
-                data.get_values<rti::core::uint64>(member_name));
+                data.get_values<DDS_UnsignedLongLong>(member_name));
     } break;
     case dds::core::xtypes::TypeKind::FLOAT_32_TYPE: {
         variant.set_values(
@@ -772,14 +772,14 @@ void dds_dynamic_data_member_to_dds_dynamic_data_variant(
                 data.value<uint32_t>(member_name));
     } break;
     case dds::core::xtypes::TypeKind::INT_64_TYPE: {
-        variant.value<rti::core::int64>(
+        variant.value<int64_t>(
                 "value.int64_value[0]",
-                data.value<rti::core::int64>(member_name));
+                data.value<int64_t>(member_name));
     } break;
     case dds::core::xtypes::TypeKind::UINT_64_TYPE: {
-        variant.value<rti::core::uint64>(
+        variant.value<uint64_t>(
                 "value.uint64_value[0]",
-                data.value<rti::core::uint64>(member_name));
+                data.value<uint64_t>(member_name));
     } break;
     case dds::core::xtypes::TypeKind::FLOAT_32_TYPE: {
         variant.value<float>(

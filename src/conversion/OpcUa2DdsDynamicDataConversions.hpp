@@ -20,8 +20,7 @@
 
 #include <open62541/types.h>
 
-#include <rtiboost/core/enable_if.hpp>
-#include <rtiboost/type_traits/is_arithmetic.hpp>
+#include <type_traits>
 
 #include <dds/core/Time.hpp>
 #include <dds/core/types.hpp>
@@ -36,7 +35,6 @@ namespace rti { namespace ddsopcua { namespace conversion {
 using namespace dds::core::xtypes;
 using namespace rti::core::xtypes;
 using namespace rti::opcua;
-using namespace rtiboost;
 
 /**
  * @brief Set a dynamic data member object with an OPC UA value.
@@ -513,11 +511,12 @@ opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
  * @param opcua_value OPC UA source variant.
  * @param dd_member_name Name of the member to be set within the DynamicData
  * object.
- * @return enable_if_c<is_arithmetic<DDS_TYPE>::value, void>::type Activates
- * the method based on whether DDS_TYPE is arithmetic. The return type is void.
+ * @return std::enable_if<std::is_arithmetic<DDS_TYPE>::value, void>::type
+ * Activates the method based on whether DDS_TYPE is arithmetic. The return
+ * type is void.
  */
 template<typename OPCUA_TYPE, typename DDS_TYPE>
-typename enable_if_c<is_arithmetic<DDS_TYPE>::value, void>::type
+typename std::enable_if<std::is_arithmetic<DDS_TYPE>::value, void>::type
 opc_ua_variant_value_to_dds_dynamic_data_variant_value(
         DynamicData& dd_value,
         const UA_Variant& opcua_value,
@@ -556,12 +555,12 @@ opc_ua_variant_value_to_dds_dynamic_data_variant_value(
  * @param opcua_value OPC UA source variant.
  * @param dd_member_name Name of the member to be set within the DynamicData
  * object.
- * @return enable_if_c<is_arithmetic<DDS_TYPE>::value, void>::type Activates
- * the method based on whether DDS_TYPE is not arithmetic. The return type is
- * void.
+ * @return std::enable_if<std::is_arithmetic<DDS_TYPE>::value, void>::type
+ * Activates the method based on whether DDS_TYPE is not arithmetic. The return
+ * type is void.
  */
 template<typename OPCUA_TYPE, typename DDS_TYPE>
-typename enable_if_c<!is_arithmetic<DDS_TYPE>::value, void>::type
+typename std::enable_if<!std::is_arithmetic<DDS_TYPE>::value, void>::type
 opc_ua_variant_value_to_dds_dynamic_data_variant_value(
         DynamicData& dd_value,
         const UA_Variant& opcua_value,

@@ -101,11 +101,6 @@ void XmlSupport::finalize_globals()
 
 void XmlSupport::initialize_globals()
 {
-    if (!RTIXMLUTILSGlobals_initialize()) {
-        RTI_THROW_GATEWAY_EXCEPTION(
-                &DDSOPCUA_LOG_INIT_FAILURE_s,
-                "RTIXMLUTILSGlobals");
-    }
 }
 
 void XmlSupport::parse_file(const std::string& filename)

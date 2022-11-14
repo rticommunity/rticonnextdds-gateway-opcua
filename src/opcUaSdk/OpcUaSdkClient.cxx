@@ -18,7 +18,8 @@
 #include <cstddef>
 
 #include <dds/core/Exception.hpp>
-#include <rti/util/util.hpp>
+#include <thread>
+#include <chrono>
 
 #include <rti/ddsopcua/DdsOpcUaGatewayException.hpp>
 
@@ -395,9 +396,9 @@ void Client::run_iterate(uint16_t timeout)
         retcode = UA_Client_run_iterate(client_, 0);
     }
 
-    // // The sleep corresponding to the timeout is actually performed by the
-    // // wrapper implementation to avoid blocking the OPC UA Client
-    rti::util::sleep(dds::core::Duration::from_millisecs(timeout));
+    // The sleep corresponding to the timeout is actually performed by the
+    // wrapper implementation to avoid blocking the OPC UA Client
+    std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
 }
 
 }}}}  // namespace rti::opcua::sdk::client

@@ -15,6 +15,9 @@
  * the Software.
  */
 
+#include <thread>
+#include <chrono>
+
 #include <rti/topic/to_string.hpp>
 
 #include <rti/ddsopcua/requester/DdsRequester.hpp>
@@ -70,7 +73,7 @@ bool Requester::wait_for_matching_gateway(
     do {
         pub_status =
                 requester_.request_datawriter().publication_matched_status();
-        rti::util::sleep(dds::core::Duration(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         elapsed_sec++;
     } while (pub_status.current_count() == 0 && !exit_condition
              && timeout_sec > elapsed_sec);

@@ -182,22 +182,22 @@ void update_sample(dds::core::xtypes::DynamicData& sample, int32_t i)
     sample.set_values("my_uint32_sequence", uint32_vector);
 
     // Int64
-    rti::core::int64 int64_value = static_cast<rti::core::int64>(
+    DDS_LongLong int64_value = static_cast<DDS_LongLong>(
             ((i % 2) == 1) ? (i % RTI_INT64_MAX) : -((i % RTI_INT64_MAX)));
-    std::vector<rti::core::int64> int64_vector(MAX_LENGTH, int64_value);
+    std::vector<DDS_LongLong> int64_vector(MAX_LENGTH, int64_value);
     int64_vector[0] = i % 2 ? RTI_INT64_MIN : RTI_INT64_MAX;
     int64_vector[MAX_LENGTH - 1] = i % 2 ? RTI_INT64_MAX : RTI_INT64_MIN;
-    sample.value<rti::core::int64>("my_int64", int64_value);
+    sample.value<DDS_LongLong>("my_int64", int64_value);
     sample.set_values("my_int64_array", int64_vector);
     sample.set_values("my_int64_sequence", int64_vector);
 
     // UInt64
-    rti::core::uint64 uint64_value =
-            static_cast<rti::core::uint64>(i % RTI_UINT64_MAX);
-    std::vector<rti::core::uint64> uint64_vector(MAX_LENGTH, uint64_value);
+    DDS_UnsignedLongLong uint64_value =
+            static_cast<DDS_UnsignedLongLong>(i % RTI_UINT64_MAX);
+    std::vector<DDS_UnsignedLongLong> uint64_vector(MAX_LENGTH, uint64_value);
     uint64_vector[0] = i % 2 ? RTI_UINT64_MIN : RTI_UINT64_MAX;
     uint64_vector[MAX_LENGTH - 1] = i % 2 ? RTI_UINT64_MAX : RTI_UINT64_MIN;
-    sample.value<rti::core::uint64>("my_uint64", uint64_value);
+    sample.value<DDS_UnsignedLongLong>("my_uint64", uint64_value);
     sample.set_values("my_uint64_array", uint64_vector);
     sample.set_values("my_uint64_sequence", uint64_vector);
 

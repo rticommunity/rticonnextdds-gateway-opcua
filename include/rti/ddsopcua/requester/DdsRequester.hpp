@@ -23,6 +23,7 @@
 
 #include "rti/ddsopcua/requester/detail/OpcUaTypes.hpp"
 #include "rti/ddsopcua/requester/detail/DdsRequesterOperations.hpp"
+#include "rti/ddsopcua/DdsOpcUaGateway.hpp"
 
 namespace rti { namespace ddsopcua { namespace requester {
 
@@ -119,6 +120,7 @@ public:
      */
     static void finalize_globals()
     {
+        rti::ddsopcua::Gateway::finalize_globals();
         dds::domain::DomainParticipant::finalize_participant_factory();
     }
 

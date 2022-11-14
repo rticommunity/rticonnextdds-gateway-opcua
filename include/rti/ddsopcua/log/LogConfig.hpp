@@ -107,7 +107,7 @@ inline rti::config::Verbosity dds_verbosity_from_level(int32_t level)
 
 inline rti::config::Verbosity service_verbosity_from_level(int32_t level)
 {
-    RTILogBitmap native_verbosity = RTI_LOG_BIT_SILENCE;
+    RTILogBitmap native_verbosity = 0;
 
     switch (level) {
         /* no break */

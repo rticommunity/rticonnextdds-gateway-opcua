@@ -73,7 +73,17 @@ Service::~Service()
 
 void Service::initialize_globals()
 {
-    RTI_RoutingService_initialize_globals();
+#if RTI_DDS_VERSION_MAJOR >= 7
+    bool rs_glob_initialized = RTI_RoutingService_initialize_globalsI();
+#else
+    bool rs_glob_initialized = RTI_RoutingService_initialize_globals();
+#endif
+    if (!rs_glob_initialized) {
+            RTI_THROW_GATEWAY_EXCEPTION(
+                &RTI_LOG_INIT_FAILURE_s,
+                "routing service globals");
+    }
+
     RTI_RoutingService_reset_product_info();
     RTI_RoutingService_set_product_info(&DDSOPCUA_PRODUCT_INFO);
     rti::ddsopcua::log::LogConfig::instance();

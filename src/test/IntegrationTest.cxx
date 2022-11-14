@@ -16,6 +16,8 @@
  */
 
 #include <thread>
+#include <thread>
+#include <chrono>
 
 #include <dds/core/ddscore.hpp>
 #include <dds/sub/ddssub.hpp>
@@ -72,7 +74,7 @@ int32_t wait_for_matching_subscription(dds::pub::DataWriter<T>& writer)
 {
     dds::core::status::PublicationMatchedStatus pub_status;
     for (int i = 0; i < MAX_RETRIES && pub_status.current_count() < 1;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         pub_status = writer.publication_matched_status();
     }
     return pub_status.current_count();
@@ -83,7 +85,7 @@ int32_t wait_for_matching_publication(dds::sub::DataReader<T>& reader)
 {
     dds::core::status::SubscriptionMatchedStatus sub_status;
     for (int i = 0; i < MAX_RETRIES && sub_status.current_count() < 1;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         sub_status = reader.subscription_matched_status();
     }
     return sub_status.current_count();
@@ -427,7 +429,7 @@ TEST(IntegrationTests, Tutorial3)
 
     bool read_values = false;
     for (int i = 0; i < MAX_RETRIES && !read_values;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         read_values =
                 assert_bool_values(requester, server_id, 1, 61103, { true });
     }
@@ -453,7 +455,7 @@ TEST(IntegrationTests, Tutorial3)
 
     read_values = false;
     for (int i = 0; i < MAX_RETRIES && !read_values;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         read_values =
                 assert_bool_values(requester, server_id, 1, 61103, { false });
     }
@@ -516,7 +518,7 @@ TEST(IntegrationTests, Tutorial4)
 
     bool read_values = false;
     for (int i = 0; i < MAX_RETRIES && !read_values;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         read_values = assert_string_values(
                 requester,
                 server_id,
