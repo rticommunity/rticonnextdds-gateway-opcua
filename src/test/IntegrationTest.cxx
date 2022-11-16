@@ -42,7 +42,6 @@ public:
             const std::string& cfg_file = "")
             : gateway_(nullptr)
     {
-        rti::ddsopcua::Gateway::initialize_globals();
         gateway_ = new rti::ddsopcua::Gateway(
                 rti::ddsopcua::GatewayProperty(cfg_name, cfg_file));
     }
@@ -51,7 +50,6 @@ public:
     {
         gateway_->stop();
         delete gateway_;
-        rti::ddsopcua::Gateway::finalize_globals();
     }
 
     void start()

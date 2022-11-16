@@ -143,7 +143,8 @@ void OpcUaConnection::delete_stream_reader(
 
     delete stream_reader;
 
-    if (async_stream_readers_.size() == 0) {
+    if (async_stream_readers_.size() == 0
+            && opcua_client_async_thread_.joinable()) {
         opcua_client_async_thread_.join();
     }
 }
