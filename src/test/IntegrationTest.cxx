@@ -222,7 +222,7 @@ bool assert_bool_values(
 template<typename T>
 bool wait_for_read_count(
         dds::sub::DataReader<T>& reader,
-        const int sample_count,
+        const size_t sample_count,
         const int timeout_sec = MAX_SECONDS)
 {
     int sleeps = 0;
@@ -244,7 +244,7 @@ bool write_sample_and_wait_for_samples(
     writer.write(sample);
     try {
         writer.wait_for_acknowledgments(dds::core::Duration(MAX_SECONDS));
-    } catch (dds::core::TimeoutError& e) {
+    } catch (dds::core::TimeoutError&) {
         return false;
     }
     return wait_for_read_count(reader, 1);
