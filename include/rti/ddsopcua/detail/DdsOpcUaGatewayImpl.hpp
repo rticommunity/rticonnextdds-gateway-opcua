@@ -18,6 +18,8 @@
 #ifndef RTI_DDSOPCUA_GATEWAY_IMPL_HPP_
 #define RTI_DDSOPCUA_GATEWAY_IMPL_HPP_
 
+#include <memory>
+
 #include <dds/core/refmacros.hpp>
 #include <rti/core/detail/SelfReference.hpp>
 
@@ -49,7 +51,7 @@ private:
     friend class rti::ddsopcua::Application;
     GatewayImpl(const GatewayProperty& property, const void* shutdown_hook);
 
-    rti::ddsopcua::service::Service* impl_;
+    std::unique_ptr<rti::ddsopcua::service::Service> impl_;
 };
 
 }}  // namespace rti::ddsopcua

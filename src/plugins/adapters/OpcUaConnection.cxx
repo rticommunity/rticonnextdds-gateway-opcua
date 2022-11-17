@@ -29,7 +29,6 @@ OpcUaConnection::OpcUaConnection(
         const rti::routing::PropertySet& connection_property)
         : adapter_property_(adapter_property),
           connection_property_(connection_property),
-          async_stream_readers_(),
           opcua_attributeservice_streamreader_(nullptr),
           opcua_client_()
 {
@@ -53,10 +52,21 @@ OpcUaConnection::OpcUaConnection(
             config::XmlTransformationParams ::
                     DDSOPCUA_OPCUA_CONNECTION_SERVER_URL_PROPERTY);
     opcua_client_.connect(server_uri);
+    opcua_client_connected_ = true;
+    opcua_client_async_thread_ = std::thread(
+            run_opcua_client,
+            std::ref(opcua_client_),
+            std::ref(opcua_client_connected_),
+            run_async_timeout_);
 }
 
 OpcUaConnection::~OpcUaConnection()
 {
+    opcua_client_.disconnect();
+    opcua_client_connected_ = false;
+    if (opcua_client_async_thread_.joinable()) {
+        opcua_client_async_thread_.join();
+    }
 }
 
 rti::routing::adapter::StreamWriter* OpcUaConnection::create_stream_writer(
@@ -113,16 +123,6 @@ rti::routing::adapter::StreamReader* OpcUaConnection::create_stream_reader(
         }
 
         stream_reader = opcua_subs_sr;
-
-        if (async_stream_readers_.size() == 0) {
-            opcua_client_async_thread_ = std::thread(
-                    run_opcua_client,
-                    std::ref(opcua_client_),
-                    std::ref(async_stream_readers_),
-                    run_async_timeout_);
-        }
-        async_stream_readers_.push_back(
-                reinterpret_cast<uintptr_t>(stream_reader));
     }
 
     return stream_reader;
@@ -131,22 +131,7 @@ rti::routing::adapter::StreamReader* OpcUaConnection::create_stream_reader(
 void OpcUaConnection::delete_stream_reader(
         rti::routing::adapter::StreamReader* stream_reader)
 {
-    // Stop opcua_client_async_thread_ before removing the stream reader if
-    // this is the last OpcUaSubscriptionStreamReader to be removed
-    std::vector<uintptr_t>::iterator it = std::find(
-            async_stream_readers_.begin(),
-            async_stream_readers_.end(),
-            reinterpret_cast<uintptr_t>(stream_reader));
-    if (it != async_stream_readers_.end()) {
-        async_stream_readers_.erase(it);
-    }
-
     delete stream_reader;
-
-    if (async_stream_readers_.size() == 0
-            && opcua_client_async_thread_.joinable()) {
-        opcua_client_async_thread_.join();
-    }
 }
 
 rti::opcua::sdk::client::Client& OpcUaConnection::connection_client()
@@ -156,10 +141,10 @@ rti::opcua::sdk::client::Client& OpcUaConnection::connection_client()
 
 void OpcUaConnection::run_opcua_client(
             opcua::sdk::client::Client& opcua_client,
-            const std::vector<uintptr_t>& async_stream_readers,
+            bool& client_connected,
             const uint16_t timeout)
 {
-    while (async_stream_readers.size() > 0) {
+    while (client_connected) {
         opcua_client.run_iterate(timeout);
     }
 }

@@ -44,7 +44,6 @@ GatewayImpl::GatewayImpl(
 
 GatewayImpl::~GatewayImpl()
 {
-    delete impl_;
 }
 
 void GatewayImpl::start()

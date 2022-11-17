@@ -110,16 +110,10 @@ void Service::initialize_globals()
 void Service::finalize_globals()
 {
 #if RTI_DDS_VERSION_MAJOR >= 7
-    bool rs_glob_finalized = RTI_RoutingService_finalize_globalsI();
+    RTI_RoutingService_finalize_globalsI();
 #else
-    bool rs_glob_finalized = RTI_RoutingService_finalize_globals();
+    RTI_RoutingService_finalize_globals();
 #endif
-    if (!rs_glob_finalized) {
-        GATEWAYLog_exception(
-                &DDSOPCUA_LOG_ANY_FAILURE_s,
-                "finalize service globals");
-    }
-
     rti::ddsopcua::config::XmlSupport::finalize_globals();
 }
 

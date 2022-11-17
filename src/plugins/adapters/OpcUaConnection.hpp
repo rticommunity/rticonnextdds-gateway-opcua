@@ -57,18 +57,19 @@ public:
 
 private:
     static void run_opcua_client(
-            opcua::sdk::client::Client& client,
-            const std::vector<uintptr_t>& async_stream_readers,
+            opcua::sdk::client::Client& opcua_client,
+            bool& client_connected,
             const uint16_t timeout);
 
 private:
     const DdsOpcUaAdapterProperty& adapter_property_;
     const rti::routing::PropertySet& connection_property_;
-    std::vector<uintptr_t> async_stream_readers_;
     opcua::sdk::client::Client opcua_client_;
     OpcUaAttributeServiceStreamReader* opcua_attributeservice_streamreader_;
     std::thread opcua_client_async_thread_;
-    uint16_t run_async_timeout_;
+    uint16_t run_async_timeout_ = 0;
+    bool opcua_client_connected_ = false;
+
 };
 
 }}}  // namespace rti::ddsopcua::adapters
