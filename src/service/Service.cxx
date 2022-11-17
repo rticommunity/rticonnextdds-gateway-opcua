@@ -82,9 +82,9 @@ Service::~Service()
     try {
         stop();
     } catch (std::exception& e) {
-        GATEWAYLog_exception(&RTI_LOG_ANY_s, e.what());
+        GATEWAYLog_exception(&DDSOPCUA_LOG_ANY_s, e.what());
     } catch (...) {
-        GATEWAYLog_exception(&RTI_LOG_UNEXPECTED_EXCEPTION);
+        GATEWAYLog_exception(&DDSOPCUA_LOG_UNEXPECTED_EXCEPTION);
     }
 }
 
@@ -97,7 +97,7 @@ void Service::initialize_globals()
 #endif
     if (!rs_glob_initialized) {
             RTI_THROW_GATEWAY_EXCEPTION(
-                &RTI_LOG_INIT_FAILURE_s,
+                &DDSOPCUA_LOG_INIT_FAILURE_s,
                 "routing service globals");
     }
 
