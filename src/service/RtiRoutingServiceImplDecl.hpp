@@ -54,7 +54,6 @@ extern void RTI_RoutingService_reset_product_info();
 #if RTI_DDS_VERSION_MAJOR >= 7
 extern DDS_Boolean RTI_RoutingService_initialize_globalsI();
 extern DDS_Boolean RTI_RoutingService_finalize_globalsI();
-extern RTI_UINT32 RTI_RoutingService_get_globals_reference_countI();
 #endif
 
     #ifdef __cplusplus

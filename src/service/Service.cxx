@@ -117,15 +117,6 @@ void Service::finalize_globals()
     rti::ddsopcua::config::XmlSupport::finalize_globals();
 }
 
-uint32_t Service::globals_reference_count()
-{
-#if RTI_DDS_VERSION_MAJOR >= 7
-    return RTI_RoutingService_get_globals_reference_countI();
-#else
-    return 0;
-#endif
-}
-
 void Service::initialize_router_property(
         rti::routing::ServiceProperty& property)
 {

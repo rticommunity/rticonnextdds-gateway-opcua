@@ -84,13 +84,6 @@ public:
      */
     static void finalize_globals();
 
-    /**
-     * @brief Provides the number of references to the Service object
-     *
-     * @return uint32_t Number of references to the Service object
-     */
-    static uint32_t globals_reference_count();
-
 private:
 
     /**
