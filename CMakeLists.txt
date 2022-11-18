@@ -311,7 +311,7 @@ install(TARGETS open62541
     ARCHIVE DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
 )
 
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
     DESTINATION "include"
     USE_SOURCE_PERMISSIONS
 )
@@ -376,11 +376,19 @@ if (BUILD_SHARED_LIBS)
         ${conextdds_libraries_release_shared}
         CONFIGURATIONS Release
         DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+        PERMISSIONS
+            OWNER_EXECUTE OWNER_WRITE OWNER_READ
+            GROUP_EXECUTE GROUP_READ
+            WORLD_EXECUTE WORLD_READ
     )
     install(FILES
         ${conextdds_libraries_debug_shared}
         CONFIGURATIONS Debug
         DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+        PERMISSIONS
+            OWNER_EXECUTE OWNER_WRITE OWNER_READ
+            GROUP_EXECUTE GROUP_READ
+            WORLD_EXECUTE WORLD_READ
     )
 endif()
 
