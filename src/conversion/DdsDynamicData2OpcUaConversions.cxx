@@ -623,6 +623,9 @@ void dds_dynamic_data_array_member_to_dds_dynamic_data_variant(
             1,
             data.member_info(member_name).element_count());
     variant.set_values("array_dimensions", array_dimensions);
+    if (data.member_info(member_name).element_count() == 0) {
+        return;
+    }
     switch (kind.underlying()) {
     case dds::core::xtypes::TypeKind::BOOLEAN_TYPE: {
         std::vector<DDS_Boolean> values =
