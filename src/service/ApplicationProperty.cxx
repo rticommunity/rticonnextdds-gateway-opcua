@@ -15,6 +15,8 @@
  * the Software.
  */
 
+#include <sstream>
+
 #include <rti/ddsopcua/log/LogConfig.hpp>
 
 #include "ApplicationProperty.hpp"
