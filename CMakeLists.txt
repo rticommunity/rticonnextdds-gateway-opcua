@@ -13,7 +13,7 @@
 # that Licensee may not combine or link such alternate versions of DDS with
 # the Software.
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.13)
 project(rtigateway-ddsopcua)
 
 option(RTIGATEWAY_BUILD_DOCS "Build documentation" OFF)
@@ -244,6 +244,7 @@ set_target_properties(rtiddsopcuagateway-lib PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     OUTPUT_NAME "rtiddsopcuagateway"
+    CXX_STANDARD 11
 )
 
 if(WIN32)
@@ -284,6 +285,7 @@ target_link_libraries(rtiddsopcuagateway-app
 set_target_properties(rtiddsopcuagateway-app PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     OUTPUT_NAME "rtiddsopcuagatewayapp"
+    CXX_STANDARD 11
 )
 
 # Multiconfiguration projects have different output directories
@@ -484,6 +486,7 @@ if (RTIGATEWAY_BUILD_TESTS)
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
         OUTPUT_NAME "rtiddsopcuagateway-tester"
+        CXX_STANDARD 11
     )
 
     # Multiconfiguration projects have different output directories
