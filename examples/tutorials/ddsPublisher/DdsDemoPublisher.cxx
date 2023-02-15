@@ -17,6 +17,8 @@
 
 #include <csignal>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "DdsDemoPublisher.hpp"
 
@@ -48,7 +50,7 @@ void run_application(bool& running)
     while (running) {
         update_sample(sample, ++i);
         writer.write(sample);
-        rti::util::sleep(dds::core::Duration(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
 

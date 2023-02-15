@@ -51,7 +51,10 @@ extern void RTI_RoutingService_set_product_info(
 
 extern void RTI_RoutingService_reset_product_info();
 
-extern DDS_Boolean RTI_RoutingService_initialize_globals();
+#if RTI_DDS_VERSION_MAJOR >= 7
+extern DDS_Boolean RTI_RoutingService_initialize_globalsI();
+extern DDS_Boolean RTI_RoutingService_finalize_globalsI();
+#endif
 
     #ifdef __cplusplus
 } /* extern "C" */

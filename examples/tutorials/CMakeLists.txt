@@ -10,6 +10,7 @@ target_link_libraries(tutorial-opc-ua-server
 )
 set_target_properties(tutorial-opc-ua-server PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    CXX_STANDARD 11
 )
 foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${output_config} output_config)
@@ -40,6 +41,7 @@ target_link_libraries(tutorial-dds-publisher
 set_target_properties(tutorial-dds-publisher
     PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        CXX_STANDARD 11
 
 )
 foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
@@ -87,6 +89,7 @@ target_link_libraries(tutorial-dds-requester
 )
 set_target_properties(tutorial-dds-requester PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    CXX_STANDARD 11
 )
 foreach (output_config ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${output_config} output_config)

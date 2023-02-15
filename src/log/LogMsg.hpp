@@ -58,6 +58,7 @@ extern const RTILogMessage DDSOPCUA_LOG_PARSER_LOAD_FILE_s;
 extern const RTILogMessage DDSOPCUA_LOG_VALIDATOR_VALIDATE_FILE_FAILURE_s;
 extern const RTILogMessage DDSOPCUA_LOG_TRANSFORMER_TRANSFORM_FAILURE_ss;
 extern const RTILogMessage DDSOPCUA_LOG_VALIDATOR_VALIDATE_ENTITY_FAILURE_s;
+extern const RTILogMessage DDSOPCUA_LOG_UNEXPECTED_EXCEPTION;
 
 // Definition of macros that configure LogConfig --------------------------
 #define MODULE_DDSOPCUA (0x300000)

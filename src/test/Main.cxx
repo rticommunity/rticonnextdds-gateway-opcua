@@ -24,7 +24,6 @@ int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
     int result = RUN_ALL_TESTS();
-    rti::ddsopcua::Gateway::finalize_globals();
     dds::domain::DomainParticipant::finalize_participant_factory();
     return result;
 }

@@ -26,7 +26,6 @@
 #include <rti/routing/adapter/AdapterPlugin.hpp>
 
 #include "plugins/adapters/DdsOpcUaAdapterProperty.hpp"
-#include "plugins/adapters/OpcUaPublishRequestThread.hpp"
 #include "opcUaSdk/OpcUaSdkClient.hpp"
 #include "service/Utils.hpp"
 

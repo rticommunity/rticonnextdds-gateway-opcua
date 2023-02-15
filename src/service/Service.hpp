@@ -28,6 +28,18 @@
 
 namespace rti { namespace ddsopcua { namespace service {
 
+/**
+ * @brief Provides RAII semantics to the globals initialization
+ * and finalization in the Service class.
+ * For that to happen, the ServiceGlobalGuards must be instantiated
+ * before the creation of XMLSupport and other derived objects.
+ */
+class ServiceGlobalsGuard {
+public:
+    ServiceGlobalsGuard();
+    ~ServiceGlobalsGuard();
+};
+
 class Service {
 public:
     /**
@@ -61,8 +73,8 @@ public:
     void print_available_configurations();
 
     /**
-     * @brief Configures the global state that must be setup before instanting
-     * a Service object.
+     * @brief Configures the global state that must be setup before
+     * instantiating a Service object.
      */
     static void initialize_globals();
 
@@ -73,11 +85,6 @@ public:
     static void finalize_globals();
 
 private:
-    // static initialization of the global state
-    struct GlobalsInitializer {
-        GlobalsInitializer();
-    };
-    const static Service::GlobalsInitializer globals_;
 
     /**
      * @brief Configures routing service properties based on the running
@@ -87,6 +94,7 @@ private:
     void initialize_router_property(rti::routing::ServiceProperty& property);
 
 private:
+    ServiceGlobalsGuard globals_guard_;
     GatewayProperty property_;
     config::XmlSupport xml_support_;
     rti::routing::ServiceProperty routing_service_property_;

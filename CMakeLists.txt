@@ -13,7 +13,7 @@
 # that Licensee may not combine or link such alternate versions of DDS with
 # the Software.
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.13)
 project(rtigateway-ddsopcua)
 
 option(RTIGATEWAY_BUILD_DOCS "Build documentation" OFF)
@@ -194,7 +194,6 @@ add_library(rtiddsopcuagateway-lib
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaAttributeServiceStreamWriter.cxx"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaConnection.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaConnection.cxx"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaPublishRequestThread.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaSubscriptionStreamReader.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaSubscriptionStreamReader.cxx"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/plugins/adapters/OpcUaAttributeServiceStreamWriter.cxx"
@@ -245,6 +244,7 @@ set_target_properties(rtiddsopcuagateway-lib PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     OUTPUT_NAME "rtiddsopcuagateway"
+    CXX_STANDARD 11
 )
 
 if(WIN32)
@@ -285,6 +285,7 @@ target_link_libraries(rtiddsopcuagateway-app
 set_target_properties(rtiddsopcuagateway-app PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     OUTPUT_NAME "rtiddsopcuagatewayapp"
+    CXX_STANDARD 11
 )
 
 # Multiconfiguration projects have different output directories
@@ -312,7 +313,7 @@ install(TARGETS open62541
     ARCHIVE DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
 )
 
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
     DESTINATION "include"
     USE_SOURCE_PERMISSIONS
 )
@@ -377,11 +378,19 @@ if (BUILD_SHARED_LIBS)
         ${conextdds_libraries_release_shared}
         CONFIGURATIONS Release
         DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+        PERMISSIONS
+            OWNER_EXECUTE OWNER_WRITE OWNER_READ
+            GROUP_EXECUTE GROUP_READ
+            WORLD_EXECUTE WORLD_READ
     )
     install(FILES
         ${conextdds_libraries_debug_shared}
         CONFIGURATIONS Debug
         DESTINATION resource/app/lib/${CONNEXTDDS_ARCH}
+        PERMISSIONS
+            OWNER_EXECUTE OWNER_WRITE OWNER_READ
+            GROUP_EXECUTE GROUP_READ
+            WORLD_EXECUTE WORLD_READ
     )
 endif()
 
@@ -477,6 +486,7 @@ if (RTIGATEWAY_BUILD_TESTS)
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
         OUTPUT_NAME "rtiddsopcuagateway-tester"
+        CXX_STANDARD 11
     )
 
     # Multiconfiguration projects have different output directories

@@ -18,7 +18,8 @@
 #include <cstddef>
 
 #include <dds/core/Exception.hpp>
-#include <rti/util/util.hpp>
+#include <thread>
+#include <chrono>
 
 #include <rti/ddsopcua/DdsOpcUaGatewayException.hpp>
 
@@ -344,17 +345,18 @@ uint32_t Client::add_monitored_item(
             req.requestedParameters.queueSize,
             req.requestedParameters.discardOldest);
 
-    client_mutex_.take();
-    UA_MonitoredItemCreateResult resp =
-            UA_Client_MonitoredItems_createDataChange(
-                    client_,                     // client
-                    subscription_id,             // subscriptionId
-                    UA_TIMESTAMPSTORETURN_BOTH,  // timestampsToReturn
-                    req,                         // createRequest
-                    monitoreditem_context,       // context
-                    monitoreditem_handling_fnc,  // dataChangeCallback
-                    nullptr);                    // deleteCallback
-    client_mutex_.give();
+    UA_MonitoredItemCreateResult resp;
+    {
+        rti::core::SemaphoreGuard mutex_guard(client_mutex_);
+        resp = UA_Client_MonitoredItems_createDataChange(
+                client_,                     // client
+                subscription_id,             // subscriptionId
+                UA_TIMESTAMPSTORETURN_BOTH,  // timestampsToReturn
+                req,                         // createRequest
+                monitoreditem_context,       // context
+                monitoreditem_handling_fnc,  // dataChangeCallback
+                nullptr);                    // deleteCallback
+    }
     if (resp.statusCode != UA_STATUSCODE_GOOD) {
         RTI_THROW_GATEWAY_EXCEPTION(
                 &DDSOPCUA_LOG_OPCUA_ADD_MONITORED_ITEM_FAILED_ss,
@@ -395,9 +397,9 @@ void Client::run_iterate(uint16_t timeout)
         retcode = UA_Client_run_iterate(client_, 0);
     }
 
-    // // The sleep corresponding to the timeout is actually performed by the
-    // // wrapper implementation to avoid blocking the OPC UA Client
-    rti::util::sleep(dds::core::Duration::from_millisecs(timeout));
+    // The sleep corresponding to the timeout is actually performed by the
+    // wrapper implementation to avoid blocking the OPC UA Client
+    std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
 }
 
 }}}}  // namespace rti::opcua::sdk::client

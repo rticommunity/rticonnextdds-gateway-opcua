@@ -130,7 +130,7 @@ void OpcUaSubscriptionStreamReader::initialize_subscription()
 void OpcUaSubscriptionStreamReader::finalize_subscription()
 {
     // Remove monitored items before closing to avoid calls to
-    // on_data_available from ocurring while wrapping up
+    // on_data_available from occurring while wrapping up
     for (auto monitored_item : monitored_item_id_map_) {
         opcua_client_.delete_monitored_item(
                 monitored_item.second.subscription_id,
@@ -158,8 +158,8 @@ void OpcUaSubscriptionStreamReader::take(
 }
 
 void OpcUaSubscriptionStreamReader::return_loan(
-        std::vector<dds::core::xtypes::DynamicData*>& sample_seq,
-        std::vector<dds::sub::SampleInfo*>& info_seq)
+        std::vector<dds::core::xtypes::DynamicData*>&,
+        std::vector<dds::sub::SampleInfo*>&)
 {
     mutex_.give();
 }

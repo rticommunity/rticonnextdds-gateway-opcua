@@ -37,6 +37,16 @@ RTI_RoutingServiceProductInfo DDSOPCUA_PRODUCT_INFO = {
     (char*) "RTI_OPCUA_DDS_Gateway"    // default app name
 };
 
+ServiceGlobalsGuard::ServiceGlobalsGuard()
+{
+    Service::initialize_globals();
+}
+
+ServiceGlobalsGuard::~ServiceGlobalsGuard()
+{
+    Service::finalize_globals();
+}
+
 Service::Service(
         const GatewayProperty& property,
         const RTI_RoutingServiceRemoteShutdownHook* shutdown_hook)
@@ -69,11 +79,28 @@ Service::Service(
 
 Service::~Service()
 {
+    try {
+        stop();
+    } catch (std::exception& e) {
+        GATEWAYLog_exception(&DDSOPCUA_LOG_ANY_s, e.what());
+    } catch (...) {
+        GATEWAYLog_exception(&DDSOPCUA_LOG_UNEXPECTED_EXCEPTION);
+    }
 }
 
 void Service::initialize_globals()
 {
-    RTI_RoutingService_initialize_globals();
+#if RTI_DDS_VERSION_MAJOR >= 7
+    bool rs_glob_initialized = RTI_RoutingService_initialize_globalsI();
+#else
+    bool rs_glob_initialized = RTI_RoutingService_initialize_globals();
+#endif
+    if (!rs_glob_initialized) {
+            RTI_THROW_GATEWAY_EXCEPTION(
+                &DDSOPCUA_LOG_INIT_FAILURE_s,
+                "routing service globals");
+    }
+
     RTI_RoutingService_reset_product_info();
     RTI_RoutingService_set_product_info(&DDSOPCUA_PRODUCT_INFO);
     rti::ddsopcua::log::LogConfig::instance();
@@ -82,22 +109,13 @@ void Service::initialize_globals()
 
 void Service::finalize_globals()
 {
-    if (!RTI_RoutingService_finalize_globals()) {
-        GATEWAYLog_exception(
-                &DDSOPCUA_LOG_ANY_FAILURE_s,
-                "finalize service globals");
-    }
-
+#if RTI_DDS_VERSION_MAJOR >= 7
+    RTI_RoutingService_finalize_globalsI();
+#else
+    RTI_RoutingService_finalize_globals();
+#endif
     rti::ddsopcua::config::XmlSupport::finalize_globals();
 }
-
-Service::GlobalsInitializer::GlobalsInitializer()
-{
-    Service::initialize_globals();
-}
-
-const Service::GlobalsInitializer Service::globals_ =
-        Service::GlobalsInitializer();
 
 void Service::initialize_router_property(
         rti::routing::ServiceProperty& property)

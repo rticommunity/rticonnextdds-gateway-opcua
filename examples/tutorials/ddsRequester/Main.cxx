@@ -18,6 +18,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
+#include <thread>
+#include <chrono>
 
 #include <rti/ddsopcua/requester/DdsRequester.hpp>
 
@@ -34,7 +36,7 @@ int main(int argc, char** argv)
 
     requester::RequesterProperties properties;
     if (utils::parse_arguments(properties, argc, argv)
-        != utils::ParseRetcode::PARSE_RETCODE_OK) {
+            != utils::ParseRetcode::PARSE_RETCODE_OK) {
         return EXIT_FAILURE;
     }
 
@@ -66,8 +68,8 @@ int main(int argc, char** argv)
             } else {
                 throw std::runtime_error("Error: Unsupported operation");
             }
-            rti::util::sleep(dds::core::Duration::from_millisecs(
-                    properties.period_msec));
+            std::this_thread::sleep_for(
+                    std::chrono::milliseconds(properties.period_msec));
         }
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;

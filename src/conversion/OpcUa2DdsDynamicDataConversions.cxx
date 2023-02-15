@@ -486,13 +486,13 @@ opc_ua_scalar_variant_to_dds_dynamic_data_fnc(
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
                 opc_ua_variant_scalar_to_dds_dynamic_data_scalar_type<
                         UA_Int64,
-                        rti::core::int64>);
+                        int64_t>);
     case sdk::types::BuiltinTypeKind::UINT64_TYPE:
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
                 opc_ua_variant_scalar_to_dds_dynamic_data_scalar_type<
                         UA_UInt64,
-                        rti::core::uint64>);
+                        uint64_t>);
     case sdk::types::BuiltinTypeKind::FLOAT_TYPE:
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
@@ -640,13 +640,13 @@ opc_ua_array_variant_to_dds_dynamic_data_fnc(
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
                 opc_ua_variant_scalar_to_dds_dynamic_data_sequence_type<
                         UA_Int64,
-                        rti::core::int64>);
+                        DDS_LongLong>);
     case sdk::types::BuiltinTypeKind::UINT64_TYPE:
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
                 opc_ua_variant_scalar_to_dds_dynamic_data_sequence_type<
                         UA_UInt64,
-                        rti::core::uint64>);
+                        DDS_UnsignedLongLong>);
     case sdk::types::BuiltinTypeKind::FLOAT_TYPE:
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
@@ -680,7 +680,7 @@ opc_ua_array_variant_to_dds_dynamic_data_fnc(
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
                 opc_ua_variant_scalar_to_dds_dynamic_data_sequence_type<
                         UA_DateTime,
-                        rti::core::int64>);
+                        DDS_LongLong>);
     case sdk::types::BuiltinTypeKind::GUID_TYPE:
         return static_cast<
                 void (*)(DynamicData&, const UA_Variant&, const std::string&)>(
@@ -839,7 +839,7 @@ void opc_ua_variant_value_to_dds_dynamic_data_variant_value(
     case opcua::sdk::types::BuiltinTypeKind::INT64_TYPE: {
         opc_ua_variant_value_to_dds_dynamic_data_variant_value<
                 UA_Int64,
-                rti::core::int64>(
+                DDS_LongLong>(
                 variant_value.get(),
                 *opcua_variant.get_const_ref(),
                 "int64_value");
@@ -847,7 +847,7 @@ void opc_ua_variant_value_to_dds_dynamic_data_variant_value(
     case opcua::sdk::types::BuiltinTypeKind::UINT64_TYPE: {
         opc_ua_variant_value_to_dds_dynamic_data_variant_value<
                 UA_UInt64,
-                rti::core::uint64>(
+                DDS_UnsignedLongLong>(
                 variant_value.get(),
                 *opcua_variant.get_const_ref(),
                 "uint64_value");
@@ -879,7 +879,7 @@ void opc_ua_variant_value_to_dds_dynamic_data_variant_value(
     case opcua::sdk::types::BuiltinTypeKind::DATETIME_TYPE: {
         opc_ua_variant_value_to_dds_dynamic_data_variant_value<
                 UA_DateTime,
-                rti::core::int64>(
+                DDS_LongLong>(
                 variant_value.get(),
                 *opcua_variant.get_const_ref(),
                 "datetime_value");

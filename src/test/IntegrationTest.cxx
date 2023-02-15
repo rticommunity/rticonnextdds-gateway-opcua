@@ -16,6 +16,8 @@
  */
 
 #include <thread>
+#include <thread>
+#include <chrono>
 
 #include <dds/core/ddscore.hpp>
 #include <dds/sub/ddssub.hpp>
@@ -32,6 +34,7 @@
 namespace rti { namespace ddsopcua { namespace test {
 
 const int MAX_RETRIES = 20;
+const int MAX_SECONDS = 10;
 
 class OpcUaDdsTutorialGateway {
 public:
@@ -40,7 +43,6 @@ public:
             const std::string& cfg_file = "")
             : gateway_(nullptr)
     {
-        rti::ddsopcua::Gateway::initialize_globals();
         gateway_ = new rti::ddsopcua::Gateway(
                 rti::ddsopcua::GatewayProperty(cfg_name, cfg_file));
     }
@@ -49,7 +51,6 @@ public:
     {
         gateway_->stop();
         delete gateway_;
-        rti::ddsopcua::Gateway::finalize_globals();
     }
 
     void start()
@@ -72,7 +73,7 @@ int32_t wait_for_matching_subscription(dds::pub::DataWriter<T>& writer)
 {
     dds::core::status::PublicationMatchedStatus pub_status;
     for (int i = 0; i < MAX_RETRIES && pub_status.current_count() < 1;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         pub_status = writer.publication_matched_status();
     }
     return pub_status.current_count();
@@ -83,7 +84,7 @@ int32_t wait_for_matching_publication(dds::sub::DataReader<T>& reader)
 {
     dds::core::status::SubscriptionMatchedStatus sub_status;
     for (int i = 0; i < MAX_RETRIES && sub_status.current_count() < 1;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         sub_status = reader.subscription_matched_status();
     }
     return sub_status.current_count();
@@ -219,22 +220,34 @@ bool assert_bool_values(
 }
 
 template<typename T>
-bool write_sample_and_wait(
+bool wait_for_read_count(
+        dds::sub::DataReader<T>& reader,
+        const size_t sample_count,
+        const int timeout_sec = MAX_SECONDS)
+{
+    int sleeps = 0;
+    bool result = (reader.read().length() >= sample_count);
+    while (!result && sleeps < timeout_sec * 10) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        ++sleeps;
+        result = (reader.read().length() >= sample_count);
+    }
+    return result;
+}
+
+template<typename T>
+bool write_sample_and_wait_for_samples(
         dds::pub::DataWriter<T>& writer,
         dds::sub::DataReader<T>& reader,
         const T& sample)
 {
     writer.write(sample);
-    int sleeps = 0;
-    int max_seconds = 10; // wait for up to 10 seconds
-    bool result = (reader.read().length() > 0);
-    while (!result && sleeps < max_seconds * 10) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        ++sleeps;
-        result = (reader.read().length() > 0);
+    try {
+        writer.wait_for_acknowledgments(dds::core::Duration(MAX_SECONDS));
+    } catch (dds::core::TimeoutError&) {
+        return false;
     }
-
-    return result;
+    return wait_for_read_count(reader, 1);
 }
 
 TEST(IntegrationTests, Tutorial1)
@@ -283,7 +296,7 @@ TEST(IntegrationTests, Tutorial1)
     while (remaining_samples > 0) {
         server.update_nodes();
 
-        waitset.dispatch(dds::core::Duration(10));
+        waitset.dispatch(dds::core::Duration(MAX_SECONDS));
         remaining_samples--;
     }
     // Check we've read all the samples we've written
@@ -427,7 +440,7 @@ TEST(IntegrationTests, Tutorial3)
 
     bool read_values = false;
     for (int i = 0; i < MAX_RETRIES && !read_values;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         read_values =
                 assert_bool_values(requester, server_id, 1, 61103, { true });
     }
@@ -453,7 +466,7 @@ TEST(IntegrationTests, Tutorial3)
 
     read_values = false;
     for (int i = 0; i < MAX_RETRIES && !read_values;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         read_values =
                 assert_bool_values(requester, server_id, 1, 61103, { false });
     }
@@ -516,7 +529,7 @@ TEST(IntegrationTests, Tutorial4)
 
     bool read_values = false;
     for (int i = 0; i < MAX_RETRIES && !read_values;
-         i++, rti::util::sleep(dds::core::Duration(1))) {
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
         read_values = assert_string_values(
                 requester,
                 server_id,
@@ -613,7 +626,7 @@ TEST(IntegrationTests, MultipleSubscriptions)
     while (remaining_samples > 0) {
         server.update_nodes();
 
-        waitset.dispatch(dds::core::Duration(10));
+        waitset.dispatch(dds::core::Duration(MAX_SECONDS));
         remaining_samples--;
     }
     // Check we've read all the samples we've written
@@ -659,19 +672,32 @@ TEST(IntegrationTests, E2EScenario)
         original_string.at(i) = std::to_string(i);
     };
     original_sample.my_string_sequence(original_string);
-    ASSERT_TRUE(write_sample_and_wait(writer, reader, original_sample));
+    write_sample_and_wait_for_samples(writer, reader, original_sample);
 
-    dds::sub::LoanedSamples<MyType> samples = reader.take();
-    ASSERT_EQ(samples.length(), 1);
-    for (const auto& sample : samples) {
-        if (sample.info().valid()) {
-            ASSERT_TRUE(
-                    sample.data().my_string_sequence().size()
-                    == tutorials::MAX_LENGTH);
-            ASSERT_TRUE(std::equal(
-                    sample.data().my_string_sequence().begin(),
-                    sample.data().my_string_sequence().end(),
-                    original_sample.my_string_sequence().begin()));
+    // The Server pushes an initial burst of data change notifications when it
+    // starts. Those notifications are forwarded by the Gateway and should be
+    // processed by the E2ESubscriptionTopic DataReader before processing other
+    // updates to avoid timing issues. For example, we could send the write
+    // request below while the Gateway is pushing the first bunch of
+    // notifications, and consider in the test code that those notifications
+    // have been as a response to that first notification. The same could happen
+    // with notifications sent when we trigger an update due to our write in the
+    // OPC UA Server (through the Gateway). To overcome that uncertainty, we
+    // try to take new samples from the Gateway (up to a level of MAX_RETRIES)
+    // to see if the value of my_string_sequence gets updated. If it does it
+    // within the allocated number of retries, we consider the test has passed.
+    // Otherwise, the test fails.
+    bool updated = false;
+    for (int i = 0; i < MAX_RETRIES && !updated;
+         i++, std::this_thread::sleep_for(std::chrono::seconds(1))) {
+        dds::sub::LoanedSamples<MyType> samples = reader.take();
+        for (const auto& sample : samples) {
+            if (sample.info().valid()) {
+                updated = (std::equal(
+                        sample.data().my_string_sequence().begin(),
+                        sample.data().my_string_sequence().end(),
+                        original_sample.my_string_sequence().begin()));
+            }
         }
     }
 
