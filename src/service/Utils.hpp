@@ -70,6 +70,15 @@ static std::string executable_path()
     return std::string(path);
 }
 
+static bool file_exists(const std::string& filename)
+{
+#if RTI_DDS_VERSION_MAJOR >= 7 && RTI_DDS_VERSION_MINOR >= 1
+    return static_cast<bool>(RTIOsapiFile_exists(filename.c_str()));
+#else
+    return static_cast<bool>(RTIOsapiUtility_fileExists(filename.c_str()));
+#endif
+}
+
 class Thread {
 public:
     Thread(const std::string& name = std::string("Thread"),

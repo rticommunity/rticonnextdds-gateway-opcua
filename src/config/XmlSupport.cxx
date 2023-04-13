@@ -274,7 +274,7 @@ bool XmlSupport::load_default_files()
     cfg_file += default_configuration_file_name();
 
     std::string normalized_path = utils::normalize_path(cfg_file).c_str();
-    if (RTIOsapiUtility_fileExists(normalized_path.c_str())) {
+    if (utils::file_exists(normalized_path)) {
         parse_file(normalized_path);
     } else {
         // If files aren't in the default location, try to load the default
@@ -285,7 +285,7 @@ bool XmlSupport::load_default_files()
         cfg_file += default_configuration_file_name();
 
         normalized_path = utils::normalize_path(cfg_file).c_str();
-        if (RTIOsapiUtility_fileExists(normalized_path.c_str())) {
+        if (utils::file_exists(normalized_path)) {
             parse_file(normalized_path);
         } else {
             GATEWAYLog_warn(
@@ -295,7 +295,7 @@ bool XmlSupport::load_default_files()
     }
 
     // Load the user file name (from working directory only)
-    if (RTIOsapiUtility_fileExists(user_configuration_file_name().c_str())) {
+    if (utils::file_exists(user_configuration_file_name())) {
         parse_file(user_configuration_file_name());
     } else {
         GATEWAYLog_warn(
