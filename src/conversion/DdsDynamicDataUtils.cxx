@@ -46,8 +46,7 @@ void set_dynamic_member_from_string(
             "Member '" + member_name + "' does not exist in type");
     }
      
-    dds::core::xtypes::DynamicType member_type = data.member_type(member_name);
-    const auto type_kind = member_type.kind();
+    const auto type_kind = data.member_info(member_name).member_kind();
     
     try {
         switch (type_kind.underlying()) {

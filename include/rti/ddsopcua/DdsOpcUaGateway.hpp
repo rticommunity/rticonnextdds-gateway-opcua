@@ -118,7 +118,6 @@ class Logger {
 public:
     typedef rti::config::Verbosity Verbosity;
     typedef rti::config::LogCategory LogCategory;
-    typedef rti::config::LoggerMode LoggerMode;
     typedef rti::config::PrintFormat PrintFormat;
 
     static Logger& instance();
