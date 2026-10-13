@@ -63,6 +63,14 @@ configure_file(
 
 # DDS Demo Requester
 
+set(RTIDDSGEN_EXTRA_ARGS)
+if(RTICONNEXTDDS_VERSION VERSION_GREATER_EQUAL "7.7.0")
+    set(RTIDDSGEN_EXTRA_ARGS
+        EXTRA_ARGS
+            -standard DDS_PSM_Cxx
+    )
+endif()
+
 connextdds_rtiddsgen_run(
     IDL_FILE
         "${CMAKE_BINARY_DIR}/resources/xml/OpcUaBuiltinDataTypes.xml"
@@ -70,6 +78,7 @@ connextdds_rtiddsgen_run(
         "${CMAKE_CURRENT_BINARY_DIR}/src/conversion/"
     LANG C++11
     UNBOUNDED
+    ${RTIDDSGEN_EXTRA_ARGS}
 )
 
 add_executable(tutorial-dds-requester
